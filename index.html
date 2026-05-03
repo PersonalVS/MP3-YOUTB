@@ -33,7 +33,6 @@
     overflow-x: hidden;
   }
 
-  /* Noise overlay */
   body::before {
     content: '';
     position: fixed;
@@ -45,24 +44,16 @@
 
   .wrap { position: relative; z-index: 1; width: 100%; max-width: 480px; }
 
-  /* Header */
-  header {
-    padding: 48px 0 32px;
-    text-align: center;
-  }
+  header { padding: 48px 0 32px; text-align: center; }
 
   .logo-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 6px;
+    display: flex; align-items: center; justify-content: center;
+    gap: 10px; margin-bottom: 6px;
   }
 
   .logo-icon {
     width: 40px; height: 40px;
-    background: var(--red);
-    border-radius: 10px;
+    background: var(--red); border-radius: 10px;
     display: flex; align-items: center; justify-content: center;
     box-shadow: 0 0 24px #ff2d2d55;
   }
@@ -72,164 +63,79 @@
   h1 {
     font-family: 'Bebas Neue', sans-serif;
     font-size: clamp(38px, 10vw, 56px);
-    letter-spacing: 2px;
-    line-height: 1;
+    letter-spacing: 2px; line-height: 1;
   }
-
   h1 span { color: var(--red); }
 
-  .tagline {
-    font-size: 13px;
-    color: var(--muted);
-    letter-spacing: 0.5px;
-    margin-top: 8px;
-  }
+  .tagline { font-size: 13px; color: var(--muted); letter-spacing: 0.5px; margin-top: 8px; }
 
-  /* Card */
   .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 24px;
-    margin-bottom: 16px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 20px; padding: 24px; margin-bottom: 16px;
   }
 
-  .input-label {
-    font-size: 11px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 10px;
-  }
+  .input-label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
 
-  .input-row {
-    display: flex;
-    gap: 10px;
-    align-items: stretch;
-  }
+  .input-row { display: flex; gap: 10px; align-items: stretch; }
 
   input[type="text"] {
-    flex: 1;
-    background: #0f0f0f;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    padding: 14px 16px;
-    outline: none;
-    transition: border-color .2s;
+    flex: 1; background: #0f0f0f; border: 1px solid var(--border);
+    border-radius: 12px; color: var(--text);
+    font-family: 'DM Sans', sans-serif; font-size: 14px;
+    padding: 14px 16px; outline: none; transition: border-color .2s;
     -webkit-appearance: none;
   }
-
   input[type="text"]:focus { border-color: var(--red); }
   input[type="text"]::placeholder { color: #333; }
 
   .paste-btn {
-    background: #1a1a1a;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    color: var(--muted);
-    font-size: 11px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    padding: 0 16px;
-    cursor: pointer;
-    transition: all .2s;
-    white-space: nowrap;
-    font-family: 'DM Sans', sans-serif;
+    background: #1a1a1a; border: 1px solid var(--border); border-radius: 12px;
+    color: var(--muted); font-size: 11px; letter-spacing: 1px;
+    text-transform: uppercase; padding: 0 16px; cursor: pointer;
+    transition: all .2s; white-space: nowrap; font-family: 'DM Sans', sans-serif;
   }
-
   .paste-btn:active { background: #222; color: var(--text); }
 
-  /* Quality selector */
-  .qual-row {
-    display: flex;
-    gap: 8px;
-    margin-top: 16px;
-  }
+  .qual-row { display: flex; gap: 8px; margin-top: 16px; }
 
   .qual-btn {
-    flex: 1;
-    background: #0f0f0f;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    color: var(--muted);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    padding: 10px 0;
-    cursor: pointer;
-    transition: all .2s;
-    text-align: center;
+    flex: 1; background: #0f0f0f; border: 1px solid var(--border);
+    border-radius: 10px; color: var(--muted);
+    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+    padding: 10px 0; cursor: pointer; transition: all .2s; text-align: center;
   }
+  .qual-btn.active { background: var(--red-dim); border-color: var(--red); color: var(--red); }
 
-  .qual-btn.active {
-    background: var(--red-dim);
-    border-color: var(--red);
-    color: var(--red);
-  }
-
-  /* Convert button */
   .convert-btn {
-    width: 100%;
-    background: var(--red);
-    border: none;
-    border-radius: 14px;
-    color: #fff;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px;
-    letter-spacing: 2px;
-    padding: 18px;
-    cursor: pointer;
-    margin-top: 16px;
-    transition: all .2s;
-    box-shadow: 0 4px 20px #ff2d2d44;
-    position: relative;
-    overflow: hidden;
+    width: 100%; background: var(--red); border: none; border-radius: 14px;
+    color: #fff; font-family: 'Bebas Neue', sans-serif; font-size: 22px;
+    letter-spacing: 2px; padding: 18px; cursor: pointer; margin-top: 16px;
+    transition: all .2s; box-shadow: 0 4px 20px #ff2d2d44; position: relative; overflow: hidden;
   }
-
-  .convert-btn:active { transform: scale(0.98); box-shadow: 0 2px 10px #ff2d2d33; }
+  .convert-btn:active { transform: scale(0.98); }
   .convert-btn:disabled { background: #2a2a2a; color: #444; box-shadow: none; cursor: not-allowed; }
 
   .convert-btn .spinner {
-    display: none;
-    width: 20px; height: 20px;
-    border: 2px solid #ffffff33;
-    border-top-color: #fff;
-    border-radius: 50%;
-    animation: spin .7s linear infinite;
-    margin: 0 auto;
+    display: none; width: 20px; height: 20px;
+    border: 2px solid #ffffff33; border-top-color: #fff;
+    border-radius: 50%; animation: spin .7s linear infinite; margin: 0 auto;
   }
-
   .convert-btn.loading .btn-text { display: none; }
   .convert-btn.loading .spinner { display: block; }
 
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* Status */
   .status {
-    display: none;
-    align-items: center;
-    gap: 10px;
-    padding: 14px 18px;
-    border-radius: 12px;
-    font-size: 14px;
-    margin-top: 16px;
-    animation: fadeIn .3s ease;
+    display: none; align-items: center; gap: 10px;
+    padding: 14px 18px; border-radius: 12px; font-size: 14px;
+    margin-top: 16px; animation: fadeIn .3s ease;
   }
-
   .status.show { display: flex; }
   .status.error { background: #ff2d2d15; border: 1px solid #ff2d2d33; color: #ff7070; }
   .status.info { background: #ffffff08; border: 1px solid var(--border); color: var(--muted); }
   .status.success { background: #1db95415; border: 1px solid #1db95433; color: var(--success); }
 
-  .status-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
   .status.error .status-dot { background: var(--red); }
   .status.info .status-dot { background: var(--muted); animation: pulse 1.5s infinite; }
   .status.success .status-dot { background: var(--success); }
@@ -237,135 +143,52 @@
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
   @keyframes fadeIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:none} }
 
-  /* Result card */
   .result-card {
-    display: none;
-    background: var(--card);
-    border: 1px solid #1db95433;
-    border-radius: 20px;
-    padding: 24px;
-    margin-top: 4px;
-    animation: fadeIn .4s ease;
+    display: none; background: var(--card); border: 1px solid #1db95433;
+    border-radius: 20px; padding: 24px; margin-top: 4px; animation: fadeIn .4s ease;
   }
-
   .result-card.show { display: block; }
 
-  .track-info {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 20px;
-  }
+  .track-info { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
 
-  .thumb {
-    width: 60px; height: 60px;
-    border-radius: 10px;
-    background: #1a1a1a;
-    object-fit: cover;
-    flex-shrink: 0;
-  }
-
+  .thumb { width: 60px; height: 60px; border-radius: 10px; background: #1a1a1a; object-fit: cover; flex-shrink: 0; }
   .thumb-placeholder {
-    width: 60px; height: 60px;
-    border-radius: 10px;
-    background: #1a1a1a;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
+    width: 60px; height: 60px; border-radius: 10px; background: #1a1a1a;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   }
 
-  .track-title {
-    font-size: 15px;
-    font-weight: 500;
-    line-height: 1.4;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-  }
-
-  .track-meta {
-    font-size: 12px;
-    color: var(--muted);
-    margin-top: 3px;
-  }
+  .track-title { font-size: 15px; font-weight: 500; line-height: 1.4; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .track-meta { font-size: 12px; color: var(--muted); margin-top: 3px; }
 
   .dl-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    width: 100%;
-    background: var(--success);
-    border: none;
-    border-radius: 14px;
-    color: #fff;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 20px;
-    letter-spacing: 2px;
-    padding: 16px;
-    cursor: pointer;
-    text-decoration: none;
-    box-shadow: 0 4px 20px #1db95433;
-    transition: all .2s;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    width: 100%; background: var(--success); border: none; border-radius: 14px;
+    color: #fff; font-family: 'Bebas Neue', sans-serif; font-size: 20px;
+    letter-spacing: 2px; padding: 16px; cursor: pointer; text-decoration: none;
+    box-shadow: 0 4px 20px #1db95433; transition: all .2s;
   }
-
   .dl-btn:active { transform: scale(0.98); }
 
   .iphone-tip {
-    margin-top: 12px;
-    background: #ffffff06;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 12px 14px;
-    font-size: 12px;
-    color: var(--muted);
-    line-height: 1.6;
+    margin-top: 12px; background: #ffffff06; border: 1px solid var(--border);
+    border-radius: 12px; padding: 12px 14px; font-size: 12px; color: var(--muted); line-height: 1.6;
   }
-
   .iphone-tip strong { color: #aaa; }
 
-  /* How-to */
-  .howto {
-    margin-top: 8px;
-  }
+  .howto { margin-top: 8px; }
+  .howto-title { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
 
-  .howto-title {
-    font-size: 11px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 12px;
-  }
-
-  .step {
-    display: flex;
-    gap: 12px;
-    align-items: flex-start;
-    margin-bottom: 12px;
-  }
-
+  .step { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 12px; }
   .step-num {
-    width: 24px; height: 24px;
-    border-radius: 8px;
-    background: var(--red-dim);
-    border: 1px solid #ff2d2d33;
-    color: var(--red);
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 14px;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
+    width: 24px; height: 24px; border-radius: 8px;
+    background: var(--red-dim); border: 1px solid #ff2d2d33; color: var(--red);
+    font-family: 'Bebas Neue', sans-serif; font-size: 14px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   }
-
   .step-text { font-size: 13px; color: #888; line-height: 1.5; padding-top: 3px; }
   .step-text strong { color: #bbb; }
 
-  footer {
-    margin-top: 32px;
-    text-align: center;
-    font-size: 11px;
-    color: #333;
-    letter-spacing: 0.5px;
-  }
+  footer { margin-top: 32px; text-align: center; font-size: 11px; color: #333; letter-spacing: 0.5px; }
 </style>
 </head>
 <body>
@@ -381,7 +204,6 @@
     <p class="tagline">Cole o link · Converta · Baixe no iPhone</p>
   </header>
 
-  <!-- Main card -->
   <div class="card">
     <div class="input-label">Link do YouTube</div>
     <div class="input-row">
@@ -406,9 +228,8 @@
     </div>
   </div>
 
-  <!-- Result -->
   <div class="result-card" id="resultCard">
-    <div class="track-info" id="trackInfo">
+    <div class="track-info">
       <div class="thumb-placeholder" id="thumbWrap">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="#333"><path d="M12 3v10.55A4 4 0 1014 17V7h4V3h-6z"/></svg>
       </div>
@@ -417,16 +238,15 @@
         <div class="track-meta" id="trackMeta">—</div>
       </div>
     </div>
-    <a class="dl-btn" id="dlBtn" href="#" download>
+    <a class="dl-btn" id="dlBtn" href="#" target="_blank" rel="noopener">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 16l-5-5h3V4h4v7h3l-5 5zm-7 2h14v2H5v-2z"/></svg>
       BAIXAR ÁUDIO
     </a>
     <div class="iphone-tip">
-      <strong>📱 No iPhone:</strong> Toque em "Baixar Áudio" → Safari irá abrir o arquivo. Toque em <strong>Compartilhar ↑</strong> → <strong>"Salvar no Arquivos"</strong> para guardar no seu iPhone. Para salvar direto na Música, use o app <strong>Documents</strong> (Readdle).
+      <strong>📱 No iPhone:</strong> Toque em "Baixar Áudio" → o arquivo abrirá no Safari. Toque em <strong>Compartilhar ↑</strong> → <strong>"Salvar no Arquivos"</strong> para guardar no iPhone.
     </div>
   </div>
 
-  <!-- How to -->
   <div class="card howto">
     <div class="howto-title">Como usar</div>
     <div class="step">
@@ -443,16 +263,23 @@
     </div>
     <div class="step">
       <div class="step-num">4</div>
-      <div class="step-text">Quando aparecer o botão verde, toque em <strong>"Baixar Áudio"</strong> e salve no app Arquivos do iPhone</div>
+      <div class="step-text">Toque em <strong>"Baixar Áudio"</strong> e salve no app <strong>Arquivos</strong> do iPhone</div>
     </div>
   </div>
 
-  <footer>Powered by cobalt.tools · Gratuito e sem anúncios</footer>
-
+  <footer>Powered by cobalt.tools instances · Gratuito e sem anúncios</footer>
 </div>
 
 <script>
 let selectedQual = 'mp3';
+
+// Public cobalt-compatible instances (no auth required)
+const INSTANCES = [
+  'https://cobalt.api.listera.app',
+  'https://cobalt.canine.tools',
+  'https://capi.oak.li',
+  'https://co.wuk.sh',
+];
 
 function setQual(btn) {
   document.querySelectorAll('.qual-btn').forEach(b => b.classList.remove('active'));
@@ -466,23 +293,35 @@ async function pasteURL() {
     document.getElementById('urlInput').value = text;
   } catch(e) {
     document.getElementById('urlInput').focus();
-    document.execCommand('paste');
   }
 }
 
 function showStatus(type, msg) {
   const el = document.getElementById('status');
-  const txt = document.getElementById('statusText');
   el.className = 'status show ' + type;
-  txt.textContent = msg;
-}
-
-function hideStatus() {
-  document.getElementById('status').className = 'status';
+  document.getElementById('statusText').textContent = msg;
 }
 
 function isValidYT(url) {
   return /youtu\.?be/.test(url);
+}
+
+async function tryInstance(apiUrl, body) {
+  const res = await fetch(apiUrl + '/', {
+    method: 'POST',
+    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+    signal: AbortSignal.timeout(12000)
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err?.error?.code || `HTTP ${res.status}`);
+  }
+  const data = await res.json();
+  if (data.status === 'error') throw new Error(data.error?.code || 'erro');
+  const url = data.url || (Array.isArray(data.tunnel) && data.tunnel[0]?.url);
+  if (!url) throw new Error('sem URL');
+  return url;
 }
 
 async function convert() {
@@ -494,96 +333,59 @@ async function convert() {
   btn.disabled = true;
   btn.classList.add('loading');
   document.getElementById('resultCard').classList.remove('show');
-  showStatus('info', 'Conectando ao servidor de conversão...');
 
-  try {
-    // cobalt.tools API — open source, free, no key needed
-    const apiUrl = 'https://api.cobalt.tools/';
+  const body = {
+    url,
+    downloadMode: 'audio',
+    audioFormat: selectedQual,
+    audioBitrate: '320',
+  };
 
-    const body = {
-      url: url,
-      downloadMode: 'audio',
-      audioFormat: selectedQual === 'mp3' ? 'mp3' : selectedQual === 'wav' ? 'wav' : 'ogg',
-      audioBitrate: '320',
-    };
+  let dlUrl = null;
+  let lastErr = '';
 
-    showStatus('info', 'Processando o vídeo...');
-
-    const res = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    });
-
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.error?.code || `Erro HTTP ${res.status}`);
+  for (let i = 0; i < INSTANCES.length; i++) {
+    showStatus('info', `Tentando servidor ${i + 1} de ${INSTANCES.length}...`);
+    try {
+      dlUrl = await tryInstance(INSTANCES[i], body);
+      break;
+    } catch(e) {
+      lastErr = e.message;
+      console.warn(`Instância ${i+1} falhou:`, e.message);
     }
-
-    const data = await res.json();
-
-    if (data.status === 'error') {
-      throw new Error(data.error?.code || 'Erro na conversão');
-    }
-
-    // Success — cobalt returns a direct download URL
-    const dlUrl = data.url || (data.tunnel && data.tunnel[0]?.url);
-    if (!dlUrl) throw new Error('URL de download não recebida');
-
-    showStatus('success', 'Pronto! Toque em "Baixar Áudio" abaixo.');
-    showResult(dlUrl, url);
-
-  } catch(err) {
-    console.error(err);
-    let msg = 'Falha na conversão. ';
-    if (err.message.includes('fetch') || err.message.includes('network') || err.message.includes('Failed')) {
-      msg += 'Verifique sua conexão com a internet.';
-    } else if (err.message.includes('content.too_long') || err.message.includes('too_long')) {
-      msg += 'Vídeo muito longo (limite ~3h).';
-    } else if (err.message.includes('private') || err.message.includes('unavailable')) {
-      msg += 'Vídeo privado ou indisponível.';
-    } else {
-      msg += err.message;
-    }
-    showStatus('error', msg);
-  } finally {
-    btn.disabled = false;
-    btn.classList.remove('loading');
   }
-}
 
-function showResult(dlUrl, ytUrl) {
-  const card = document.getElementById('resultCard');
-  const dlBtn = document.getElementById('dlBtn');
+  btn.disabled = false;
+  btn.classList.remove('loading');
 
-  // Try to get video ID for thumbnail
-  const vidId = ytUrl.match(/(?:v=|youtu\.be\/)([A-Za-z0-9_-]{11})/)?.[1];
-  const thumbWrap = document.getElementById('thumbWrap');
+  if (!dlUrl) {
+    showStatus('error', `Todos os servidores falharam. Tente novamente em instantes. (${lastErr})`);
+    return;
+  }
+
+  showStatus('success', 'Pronto! Toque em "Baixar Áudio" abaixo.');
+
+  // Thumbnail
+  const vidId = url.match(/(?:v=|youtu\.be\/)([A-Za-z0-9_-]{11})/)?.[1];
   if (vidId) {
     const img = document.createElement('img');
     img.className = 'thumb';
     img.src = `https://img.youtube.com/vi/${vidId}/mqdefault.jpg`;
-    img.onerror = () => {};
-    thumbWrap.replaceWith(img);
+    const tw = document.getElementById('thumbWrap');
+    if (tw) tw.replaceWith(img);
   }
 
   document.getElementById('trackTitle').textContent = 'Áudio convertido · ' + selectedQual.toUpperCase();
   document.getElementById('trackMeta').textContent = '320kbps · Pronto para download';
 
+  const dlBtn = document.getElementById('dlBtn');
   dlBtn.href = dlUrl;
   dlBtn.download = `audio.${selectedQual}`;
-  // For iOS, open in new tab so Safari can handle it
-  dlBtn.target = '_blank';
-  dlBtn.rel = 'noopener';
 
-  card.classList.add('show');
-  card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  document.getElementById('resultCard').classList.add('show');
+  document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-// Allow Enter key
 document.getElementById('urlInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') convert();
 });
