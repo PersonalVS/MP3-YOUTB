@@ -9,112 +9,55 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0a0a0a;
-    --card: #111111;
-    --border: #1e1e1e;
-    --red: #ff2d2d;
-    --red-dim: #ff2d2d22;
-    --text: #f0f0f0;
-    --muted: #555;
-    --success: #1db954;
+    --bg: #0a0a0a; --card: #111111; --border: #1e1e1e;
+    --red: #ff2d2d; --red-dim: #ff2d2d22;
+    --text: #f0f0f0; --muted: #555; --success: #1db954;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
   body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100dvh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 0 16px 40px;
-    overflow-x: hidden;
+    background: var(--bg); color: var(--text);
+    font-family: 'DM Sans', sans-serif; min-height: 100dvh;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 0 16px 40px; overflow-x: hidden;
   }
-
   body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
+    content: ''; position: fixed; inset: 0;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 0;
+    pointer-events: none; z-index: 0;
   }
-
   .wrap { position: relative; z-index: 1; width: 100%; max-width: 480px; }
-
   header { padding: 48px 0 32px; text-align: center; }
-
-  .logo-row {
-    display: flex; align-items: center; justify-content: center;
-    gap: 10px; margin-bottom: 6px;
-  }
-
   .logo-icon {
-    width: 40px; height: 40px;
-    background: var(--red); border-radius: 10px;
+    width: 40px; height: 40px; background: var(--red); border-radius: 10px;
     display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 0 24px #ff2d2d55;
+    box-shadow: 0 0 24px #ff2d2d55; margin: 0 auto 6px;
   }
-
-  .logo-icon svg { width: 22px; height: 22px; }
-
-  h1 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(38px, 10vw, 56px);
-    letter-spacing: 2px; line-height: 1;
-  }
+  h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(38px, 10vw, 56px); letter-spacing: 2px; line-height: 1; }
   h1 span { color: var(--red); }
-
-  .tagline { font-size: 13px; color: var(--muted); letter-spacing: 0.5px; margin-top: 8px; }
-
-  .card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 20px; padding: 24px; margin-bottom: 16px;
-  }
-
+  .tagline { font-size: 13px; color: var(--muted); margin-top: 8px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 24px; margin-bottom: 16px; }
   .input-label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
-
-  .input-row { display: flex; gap: 10px; align-items: stretch; }
-
+  .input-row { display: flex; gap: 10px; }
   input[type="text"] {
-    flex: 1; background: #0f0f0f; border: 1px solid var(--border);
-    border-radius: 12px; color: var(--text);
-    font-family: 'DM Sans', sans-serif; font-size: 14px;
-    padding: 14px 16px; outline: none; transition: border-color .2s;
-    -webkit-appearance: none;
+    flex: 1; background: #0f0f0f; border: 1px solid var(--border); border-radius: 12px;
+    color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px;
+    padding: 14px 16px; outline: none; transition: border-color .2s; -webkit-appearance: none;
   }
   input[type="text"]:focus { border-color: var(--red); }
   input[type="text"]::placeholder { color: #333; }
-
   .paste-btn {
     background: #1a1a1a; border: 1px solid var(--border); border-radius: 12px;
-    color: var(--muted); font-size: 11px; letter-spacing: 1px;
-    text-transform: uppercase; padding: 0 16px; cursor: pointer;
-    transition: all .2s; white-space: nowrap; font-family: 'DM Sans', sans-serif;
+    color: var(--muted); font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
+    padding: 0 16px; cursor: pointer; white-space: nowrap; font-family: 'DM Sans', sans-serif;
   }
-  .paste-btn:active { background: #222; color: var(--text); }
-
-  .qual-row { display: flex; gap: 8px; margin-top: 16px; }
-
-  .qual-btn {
-    flex: 1; background: #0f0f0f; border: 1px solid var(--border);
-    border-radius: 10px; color: var(--muted);
-    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
-    padding: 10px 0; cursor: pointer; transition: all .2s; text-align: center;
-  }
-  .qual-btn.active { background: var(--red-dim); border-color: var(--red); color: var(--red); }
-
   .convert-btn {
     width: 100%; background: var(--red); border: none; border-radius: 14px;
     color: #fff; font-family: 'Bebas Neue', sans-serif; font-size: 22px;
     letter-spacing: 2px; padding: 18px; cursor: pointer; margin-top: 16px;
-    transition: all .2s; box-shadow: 0 4px 20px #ff2d2d44; position: relative; overflow: hidden;
+    box-shadow: 0 4px 20px #ff2d2d44; transition: all .2s;
   }
   .convert-btn:active { transform: scale(0.98); }
   .convert-btn:disabled { background: #2a2a2a; color: #444; box-shadow: none; cursor: not-allowed; }
-
   .convert-btn .spinner {
     display: none; width: 20px; height: 20px;
     border: 2px solid #ffffff33; border-top-color: #fff;
@@ -122,44 +65,35 @@
   }
   .convert-btn.loading .btn-text { display: none; }
   .convert-btn.loading .spinner { display: block; }
-
   @keyframes spin { to { transform: rotate(360deg); } }
-
   .status {
     display: none; align-items: center; gap: 10px;
-    padding: 14px 18px; border-radius: 12px; font-size: 14px;
-    margin-top: 16px; animation: fadeIn .3s ease;
+    padding: 14px 18px; border-radius: 12px; font-size: 13px; margin-top: 16px;
   }
   .status.show { display: flex; }
   .status.error { background: #ff2d2d15; border: 1px solid #ff2d2d33; color: #ff7070; }
   .status.info { background: #ffffff08; border: 1px solid var(--border); color: var(--muted); }
   .status.success { background: #1db95415; border: 1px solid #1db95433; color: var(--success); }
-
   .status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
   .status.error .status-dot { background: var(--red); }
   .status.info .status-dot { background: var(--muted); animation: pulse 1.5s infinite; }
   .status.success .status-dot { background: var(--success); }
-
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
   @keyframes fadeIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:none} }
 
   .result-card {
     display: none; background: var(--card); border: 1px solid #1db95433;
-    border-radius: 20px; padding: 24px; margin-top: 4px; animation: fadeIn .4s ease;
+    border-radius: 20px; padding: 24px; margin-bottom: 16px; animation: fadeIn .4s ease;
   }
   .result-card.show { display: block; }
-
   .track-info { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
-
-  .thumb { width: 60px; height: 60px; border-radius: 10px; background: #1a1a1a; object-fit: cover; flex-shrink: 0; }
+  .thumb { width: 60px; height: 60px; border-radius: 10px; object-fit: cover; flex-shrink: 0; }
   .thumb-placeholder {
     width: 60px; height: 60px; border-radius: 10px; background: #1a1a1a;
     display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   }
-
-  .track-title { font-size: 15px; font-weight: 500; line-height: 1.4; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .track-title { font-size: 15px; font-weight: 500; line-height: 1.4; }
   .track-meta { font-size: 12px; color: var(--muted); margin-top: 3px; }
-
   .dl-btn {
     display: flex; align-items: center; justify-content: center; gap: 10px;
     width: 100%; background: var(--success); border: none; border-radius: 14px;
@@ -167,16 +101,24 @@
     letter-spacing: 2px; padding: 16px; cursor: pointer; text-decoration: none;
     box-shadow: 0 4px 20px #1db95433; transition: all .2s;
   }
-  .dl-btn:active { transform: scale(0.98); }
-
   .iphone-tip {
     margin-top: 12px; background: #ffffff06; border: 1px solid var(--border);
     border-radius: 12px; padding: 12px 14px; font-size: 12px; color: var(--muted); line-height: 1.6;
   }
   .iphone-tip strong { color: #aaa; }
 
-  .howto { margin-top: 8px; }
-  .howto-title { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+  .svc-title { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+  .svc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .svc-btn {
+    background: #0f0f0f; border: 1px solid var(--border); border-radius: 12px;
+    color: #888; font-family: 'DM Sans', sans-serif;
+    padding: 14px 12px; cursor: pointer; text-align: left; transition: all .2s;
+    display: flex; flex-direction: column; gap: 3px;
+  }
+  .svc-btn:active { background: #1a1a1a; border-color: var(--red); }
+  .svc-btn .svc-name { font-weight: 500; color: #ccc; font-size: 14px; }
+  .svc-btn .svc-desc { font-size: 11px; color: #555; }
+  .svc-note { margin-top: 10px; font-size: 11px; color: #444; line-height: 1.5; }
 
   .step { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 12px; }
   .step-num {
@@ -187,18 +129,14 @@
   }
   .step-text { font-size: 13px; color: #888; line-height: 1.5; padding-top: 3px; }
   .step-text strong { color: #bbb; }
-
-  footer { margin-top: 32px; text-align: center; font-size: 11px; color: #333; letter-spacing: 0.5px; }
+  footer { margin-top: 32px; text-align: center; font-size: 11px; color: #333; }
 </style>
 </head>
 <body>
 <div class="wrap">
-
   <header>
-    <div class="logo-row">
-      <div class="logo-icon">
-        <svg viewBox="0 0 24 24" fill="white"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75L9.75 10.5l-1.5-.75V15l1.5-.75L12 15.75l2.25-1.125V9.75L12 8.25z"/></svg>
-      </div>
+    <div class="logo-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75L9.75 10.5l-1.5-.75V15l1.5-.75L12 15.75l2.25-1.125V9.75L12 8.25z"/></svg>
     </div>
     <h1>YT <span>→</span> MP3</h1>
     <p class="tagline">Cole o link · Converta · Baixe no iPhone</p>
@@ -210,18 +148,10 @@
       <input type="text" id="urlInput" placeholder="https://youtube.com/watch?v=..." autocomplete="off" autocorrect="off" spellcheck="false">
       <button class="paste-btn" onclick="pasteURL()">Colar</button>
     </div>
-
-    <div class="qual-row">
-      <button class="qual-btn active" data-q="mp3" onclick="setQual(this)">MP3</button>
-      <button class="qual-btn" data-q="wav" onclick="setQual(this)">WAV</button>
-      <button class="qual-btn" data-q="ogg" onclick="setQual(this)">OGG</button>
-    </div>
-
     <button class="convert-btn" id="convertBtn" onclick="convert()">
       <span class="btn-text">CONVERTER</span>
       <div class="spinner"></div>
     </button>
-
     <div class="status" id="status">
       <div class="status-dot"></div>
       <span id="statusText"></span>
@@ -234,94 +164,63 @@
         <svg width="24" height="24" viewBox="0 0 24 24" fill="#333"><path d="M12 3v10.55A4 4 0 1014 17V7h4V3h-6z"/></svg>
       </div>
       <div>
-        <div class="track-title" id="trackTitle">Áudio pronto para download</div>
-        <div class="track-meta" id="trackMeta">—</div>
+        <div class="track-title" id="trackTitle">Áudio pronto</div>
+        <div class="track-meta" id="trackMeta">MP3 · 128kbps</div>
       </div>
     </div>
     <a class="dl-btn" id="dlBtn" href="#" target="_blank" rel="noopener">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 16l-5-5h3V4h4v7h3l-5 5zm-7 2h14v2H5v-2z"/></svg>
-      BAIXAR ÁUDIO
+      BAIXAR MP3
     </a>
     <div class="iphone-tip">
-      <strong>📱 No iPhone:</strong> Toque em "Baixar Áudio" → o arquivo abrirá no Safari. Toque em <strong>Compartilhar ↑</strong> → <strong>"Salvar no Arquivos"</strong> para guardar no iPhone.
+      <strong>📱 iPhone:</strong> Toque em "Baixar MP3" → Safari abre o arquivo → toque <strong>Compartilhar ↑</strong> → <strong>"Salvar no Arquivos"</strong>.
     </div>
   </div>
 
-  <div class="card howto">
-    <div class="howto-title">Como usar</div>
-    <div class="step">
-      <div class="step-num">1</div>
-      <div class="step-text">Abra o YouTube, encontre o vídeo e <strong>copie o link</strong> da barra de endereço ou no botão "Compartilhar"</div>
+  <!-- Services -->
+  <div class="card">
+    <div class="svc-title">🔗 Serviços diretos (sempre funcionam)</div>
+    <div class="svc-grid">
+      <button class="svc-btn" onclick="openSvc('https://yt1s.io')">
+        <span class="svc-name">yt1s.io</span>
+        <span class="svc-desc">Rápido, sem cadastro</span>
+      </button>
+      <button class="svc-btn" onclick="openSvc('https://ytmp3.cc')">
+        <span class="svc-name">ytmp3.cc</span>
+        <span class="svc-desc">MP3 até 320kbps</span>
+      </button>
+      <button class="svc-btn" onclick="openSvc('https://ezmp3.cc')">
+        <span class="svc-name">ezmp3.cc</span>
+        <span class="svc-desc">Simples e direto</span>
+      </button>
+      <button class="svc-btn" onclick="openSvc('https://y2mate.com')">
+        <span class="svc-name">y2mate.com</span>
+        <span class="svc-desc">Vários formatos</span>
+      </button>
     </div>
-    <div class="step">
-      <div class="step-num">2</div>
-      <div class="step-text">Volte aqui e toque em <strong>"Colar"</strong> — ou cole manualmente no campo acima</div>
-    </div>
-    <div class="step">
-      <div class="step-num">3</div>
-      <div class="step-text">Escolha o formato e toque em <strong>"Converter"</strong></div>
-    </div>
-    <div class="step">
-      <div class="step-num">4</div>
-      <div class="step-text">Toque em <strong>"Baixar Áudio"</strong> e salve no app <strong>Arquivos</strong> do iPhone</div>
+    <div class="svc-note">
+      💡 Toque num serviço → o link do YouTube é copiado automaticamente → cole no site e baixe o MP3.
     </div>
   </div>
 
-  <footer>Powered by cobalt.tools instances · Gratuito e sem anúncios</footer>
+  <footer>YT → MP3 · Gratuito · Sem anúncios</footer>
 </div>
 
 <script>
-let selectedQual = 'mp3';
-
-// Public cobalt-compatible instances (no auth required)
-const INSTANCES = [
-  'https://cobalt.api.listera.app',
-  'https://cobalt.canine.tools',
-  'https://capi.oak.li',
-  'https://co.wuk.sh',
-];
-
-function setQual(btn) {
-  document.querySelectorAll('.qual-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  selectedQual = btn.dataset.q;
-}
+function isValidYT(url) { return /youtu\.?be/.test(url); }
+function getVideoId(url) { return url.match(/(?:v=|youtu\.be\/)([A-Za-z0-9_-]{11})/)?.[1]; }
 
 async function pasteURL() {
   try {
     const text = await navigator.clipboard.readText();
     document.getElementById('urlInput').value = text;
-  } catch(e) {
-    document.getElementById('urlInput').focus();
-  }
+  } catch(e) { document.getElementById('urlInput').focus(); }
 }
 
 function showStatus(type, msg) {
   const el = document.getElementById('status');
   el.className = 'status show ' + type;
   document.getElementById('statusText').textContent = msg;
-}
-
-function isValidYT(url) {
-  return /youtu\.?be/.test(url);
-}
-
-async function tryInstance(apiUrl, body) {
-  const res = await fetch(apiUrl + '/', {
-    method: 'POST',
-    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-    signal: AbortSignal.timeout(12000)
-  });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err?.error?.code || `HTTP ${res.status}`);
-  }
-  const data = await res.json();
-  if (data.status === 'error') throw new Error(data.error?.code || 'erro');
-  const url = data.url || (Array.isArray(data.tunnel) && data.tunnel[0]?.url);
-  if (!url) throw new Error('sem URL');
-  return url;
 }
 
 async function convert() {
@@ -333,57 +232,84 @@ async function convert() {
   btn.disabled = true;
   btn.classList.add('loading');
   document.getElementById('resultCard').classList.remove('show');
+  showStatus('info', 'Buscando áudio...');
 
-  const body = {
-    url,
-    downloadMode: 'audio',
-    audioFormat: selectedQual,
-    audioBitrate: '320',
-  };
+  const vidId = getVideoId(url);
 
-  let dlUrl = null;
-  let lastErr = '';
+  try {
+    // Use the open-source API from loader.to via CORS proxy
+    const target = `https://loader.to/api/button/?url=${encodeURIComponent(url)}&f=mp3&quality=128`;
+    const proxy = `https://corsproxy.io/?${encodeURIComponent(target)}`;
 
-  for (let i = 0; i < INSTANCES.length; i++) {
-    showStatus('info', `Tentando servidor ${i + 1} de ${INSTANCES.length}...`);
-    try {
-      dlUrl = await tryInstance(INSTANCES[i], body);
-      break;
-    } catch(e) {
-      lastErr = e.message;
-      console.warn(`Instância ${i+1} falhou:`, e.message);
+    const res = await fetch(proxy, { signal: AbortSignal.timeout(20000) });
+    const text = await res.text();
+
+    // Extract any mp3 URL from the response
+    const mp3Match = text.match(/https?:\/\/[^\s"'<>]*\.mp3[^\s"'<>]*/);
+    const genericMatch = text.match(/href="(https:\/\/cdn[^\s"'<>]+)"/);
+
+    const dlUrl = mp3Match?.[0] || genericMatch?.[1];
+
+    if (dlUrl) {
+      showResult(dlUrl, vidId);
+      return;
     }
+
+    // Try alternate: invidious open instance for audio stream
+    const invUrl = `https://inv.nadeko.net/latest_version?id=${vidId}&itag=140`;
+    const proxyInv = `https://corsproxy.io/?${encodeURIComponent(invUrl)}`;
+    const res2 = await fetch(proxyInv, { signal: AbortSignal.timeout(10000), redirect: 'follow' });
+    if (res2.ok) {
+      const blob = await res2.blob();
+      if (blob.size > 1000) {
+        const blobUrl = URL.createObjectURL(blob);
+        showResult(blobUrl, vidId, true);
+        return;
+      }
+    }
+
+    throw new Error('not_found');
+  } catch(e) {
+    console.error(e);
+    showStatus('error', 'Conversão automática indisponível agora. Use os serviços abaixo ↓');
+  } finally {
+    btn.disabled = false;
+    btn.classList.remove('loading');
   }
+}
 
-  btn.disabled = false;
-  btn.classList.remove('loading');
+function showResult(dlUrl, vidId, isBlob = false) {
+  showStatus('success', 'Pronto! Toque em "Baixar MP3" abaixo.');
 
-  if (!dlUrl) {
-    showStatus('error', `Todos os servidores falharam. Tente novamente em instantes. (${lastErr})`);
-    return;
-  }
-
-  showStatus('success', 'Pronto! Toque em "Baixar Áudio" abaixo.');
-
-  // Thumbnail
-  const vidId = url.match(/(?:v=|youtu\.be\/)([A-Za-z0-9_-]{11})/)?.[1];
   if (vidId) {
     const img = document.createElement('img');
     img.className = 'thumb';
     img.src = `https://img.youtube.com/vi/${vidId}/mqdefault.jpg`;
     const tw = document.getElementById('thumbWrap');
-    if (tw) tw.replaceWith(img);
+    if (tw && tw.id === 'thumbWrap') tw.replaceWith(img);
   }
-
-  document.getElementById('trackTitle').textContent = 'Áudio convertido · ' + selectedQual.toUpperCase();
-  document.getElementById('trackMeta').textContent = '320kbps · Pronto para download';
 
   const dlBtn = document.getElementById('dlBtn');
   dlBtn.href = dlUrl;
-  dlBtn.download = `audio.${selectedQual}`;
+  if (isBlob) {
+    dlBtn.download = 'audio.m4a';
+    document.getElementById('trackMeta').textContent = 'M4A · 128kbps';
+  } else {
+    dlBtn.download = 'audio.mp3';
+  }
 
   document.getElementById('resultCard').classList.add('show');
   document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function openSvc(baseUrl) {
+  const url = document.getElementById('urlInput').value.trim();
+  if (url && isValidYT(url)) {
+    navigator.clipboard.writeText(url).catch(() => {});
+    showStatus('info', '✅ Link copiado! Cole no site que vai abrir.');
+    document.getElementById('status').classList.add('show');
+  }
+  window.open(baseUrl, '_blank');
 }
 
 document.getElementById('urlInput').addEventListener('keydown', e => {
