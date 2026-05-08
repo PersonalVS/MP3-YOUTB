@@ -2,319 +2,570 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>YT → MP3</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Avaliação Pós-Treino</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0a0a0a; --card: #111111; --border: #1e1e1e;
-    --red: #ff2d2d; --red-dim: #ff2d2d22;
-    --text: #f0f0f0; --muted: #555; --success: #1db954;
+    --bg: #0a0a0a; --surface: #141414; --card: #1c1c1c; --border: #2a2a2a;
+    --accent: #e8ff47; --accent2: #ff4757; --text: #f0f0f0; --muted: #666; --success: #2ed573;
+    --manha: #f7971e; --tarde: #4fc3f7; --noite: #9c6cfa;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  body {
-    background: var(--bg); color: var(--text);
-    font-family: 'DM Sans', sans-serif; min-height: 100dvh;
-    display: flex; flex-direction: column; align-items: center;
-    padding: 0 16px 40px; overflow-x: hidden;
-  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; overflow-x: hidden; }
   body::before {
-    content: ''; position: fixed; inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none; z-index: 0;
+    content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.5;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
   }
-  .wrap { position: relative; z-index: 1; width: 100%; max-width: 480px; }
-  header { padding: 48px 0 32px; text-align: center; }
-  .logo-icon {
-    width: 40px; height: 40px; background: var(--red); border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 0 24px #ff2d2d55; margin: 0 auto 6px;
-  }
-  h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(38px, 10vw, 56px); letter-spacing: 2px; line-height: 1; }
-  h1 span { color: var(--red); }
-  .tagline { font-size: 13px; color: var(--muted); margin-top: 8px; }
-  .card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 24px; margin-bottom: 16px; }
-  .input-label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
-  .input-row { display: flex; gap: 10px; }
-  input[type="text"] {
-    flex: 1; background: #0f0f0f; border: 1px solid var(--border); border-radius: 12px;
-    color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px;
-    padding: 14px 16px; outline: none; transition: border-color .2s; -webkit-appearance: none;
-  }
-  input[type="text"]:focus { border-color: var(--red); }
-  input[type="text"]::placeholder { color: #333; }
-  .paste-btn {
-    background: #1a1a1a; border: 1px solid var(--border); border-radius: 12px;
-    color: var(--muted); font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
-    padding: 0 16px; cursor: pointer; white-space: nowrap; font-family: 'DM Sans', sans-serif;
-  }
-  .convert-btn {
-    width: 100%; background: var(--red); border: none; border-radius: 14px;
-    color: #fff; font-family: 'Bebas Neue', sans-serif; font-size: 22px;
-    letter-spacing: 2px; padding: 18px; cursor: pointer; margin-top: 16px;
-    box-shadow: 0 4px 20px #ff2d2d44; transition: all .2s;
-  }
-  .convert-btn:active { transform: scale(0.98); }
-  .convert-btn:disabled { background: #2a2a2a; color: #444; box-shadow: none; cursor: not-allowed; }
-  .convert-btn .spinner {
-    display: none; width: 20px; height: 20px;
-    border: 2px solid #ffffff33; border-top-color: #fff;
-    border-radius: 50%; animation: spin .7s linear infinite; margin: 0 auto;
-  }
-  .convert-btn.loading .btn-text { display: none; }
-  .convert-btn.loading .spinner { display: block; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .status {
-    display: none; align-items: center; gap: 10px;
-    padding: 14px 18px; border-radius: 12px; font-size: 13px; margin-top: 16px;
-  }
-  .status.show { display: flex; }
-  .status.error { background: #ff2d2d15; border: 1px solid #ff2d2d33; color: #ff7070; }
-  .status.info { background: #ffffff08; border: 1px solid var(--border); color: var(--muted); }
-  .status.success { background: #1db95415; border: 1px solid #1db95433; color: var(--success); }
-  .status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .status.error .status-dot { background: var(--red); }
-  .status.info .status-dot { background: var(--muted); animation: pulse 1.5s infinite; }
-  .status.success .status-dot { background: var(--success); }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
-  @keyframes fadeIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:none} }
+  .wrapper { position: relative; z-index: 1; max-width: 480px; margin: 0 auto; padding: 0 20px 60px; }
+  .header { padding: 40px 0 30px; text-align: center; }
+  .logo-bar { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 32px; }
+  .logo-icon { width: 36px; height: 36px; background: var(--accent); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .logo-text { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 3px; }
+  .header-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(52px,14vw,72px); line-height: 0.9; letter-spacing: -1px; }
+  .header-title span { color: var(--accent); display: block; }
+  .header-sub { margin-top: 12px; color: var(--muted); font-size: 14px; font-weight: 300; }
 
-  .result-card {
-    display: none; background: var(--card); border: 1px solid #1db95433;
-    border-radius: 20px; padding: 24px; margin-bottom: 16px; animation: fadeIn .4s ease;
-  }
-  .result-card.show { display: block; }
-  .track-info { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
-  .thumb { width: 60px; height: 60px; border-radius: 10px; object-fit: cover; flex-shrink: 0; }
-  .thumb-placeholder {
-    width: 60px; height: 60px; border-radius: 10px; background: #1a1a1a;
-    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  }
-  .track-title { font-size: 15px; font-weight: 500; line-height: 1.4; }
-  .track-meta { font-size: 12px; color: var(--muted); margin-top: 3px; }
-  .dl-btn {
-    display: flex; align-items: center; justify-content: center; gap: 10px;
-    width: 100%; background: var(--success); border: none; border-radius: 14px;
-    color: #fff; font-family: 'Bebas Neue', sans-serif; font-size: 20px;
-    letter-spacing: 2px; padding: 16px; cursor: pointer; text-decoration: none;
-    box-shadow: 0 4px 20px #1db95433; transition: all .2s;
-  }
-  .iphone-tip {
-    margin-top: 12px; background: #ffffff06; border: 1px solid var(--border);
-    border-radius: 12px; padding: 12px 14px; font-size: 12px; color: var(--muted); line-height: 1.6;
-  }
-  .iphone-tip strong { color: #aaa; }
+  .progress-track { display: flex; gap: 6px; margin: 28px 0; }
+  .progress-step { flex: 1; height: 3px; background: var(--border); border-radius: 2px; transition: background 0.4s; }
+  .progress-step.active { background: var(--accent); }
+  .progress-step.done { background: var(--success); }
 
-  .svc-title { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
-  .svc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .svc-btn {
-    background: #0f0f0f; border: 1px solid var(--border); border-radius: 12px;
-    color: #888; font-family: 'DM Sans', sans-serif;
-    padding: 14px 12px; cursor: pointer; text-align: left; transition: all .2s;
-    display: flex; flex-direction: column; gap: 3px;
-  }
-  .svc-btn:active { background: #1a1a1a; border-color: var(--red); }
-  .svc-btn .svc-name { font-weight: 500; color: #ccc; font-size: 14px; }
-  .svc-btn .svc-desc { font-size: 11px; color: #555; }
-  .svc-note { margin-top: 10px; font-size: 11px; color: #444; line-height: 1.5; }
+  .step { display: none; animation: fadeUp 0.4s ease forwards; }
+  .step.visible { display: block; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-  .step { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 12px; }
-  .step-num {
-    width: 24px; height: 24px; border-radius: 8px;
-    background: var(--red-dim); border: 1px solid #ff2d2d33; color: var(--red);
-    font-family: 'Bebas Neue', sans-serif; font-size: 14px;
-    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  }
-  .step-text { font-size: 13px; color: #888; line-height: 1.5; padding-top: 3px; }
-  .step-text strong { color: #bbb; }
-  footer { margin-top: 32px; text-align: center; font-size: 11px; color: #333; }
+  .step-label { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+  .step-title { font-family: 'Bebas Neue', sans-serif; font-size: 36px; letter-spacing: 1px; line-height: 1; margin-bottom: 24px; }
+
+  .emoji-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 8px; margin-bottom: 10px; }
+  .emoji-btn { background: var(--card); border: 2px solid var(--border); border-radius: 16px; padding: 16px 8px 12px; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .emoji-btn:hover { border-color: var(--accent); transform: translateY(-3px); }
+  .emoji-btn.selected { border-color: var(--accent); background: rgba(232,255,71,0.08); transform: translateY(-3px); }
+  .emoji-btn .emoji { font-size: 28px; }
+  .emoji-btn .label { font-size: 10px; color: var(--muted); font-weight: 500; text-align: center; }
+  .emoji-btn.selected .label { color: var(--accent); }
+
+  .star-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 24px; margin-bottom: 16px; }
+  .star-label { font-size: 13px; font-weight: 500; color: var(--muted); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .stars { display: flex; gap: 8px; }
+  .star { font-size: 32px; cursor: pointer; transition: transform 0.15s; filter: grayscale(1) opacity(0.3); user-select: none; }
+  .star:hover, .star.lit { filter: grayscale(0) opacity(1); transform: scale(1.15); }
+
+  .tags-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .tag { padding: 8px 16px; border-radius: 100px; border: 1.5px solid var(--border); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; color: var(--muted); background: var(--card); }
+  .tag:hover { border-color: var(--accent); color: var(--text); }
+  .tag.selected { border-color: var(--accent); background: rgba(232,255,71,0.1); color: var(--accent); }
+
+  .comment-box { width: 100%; background: var(--card); border: 1.5px solid var(--border); border-radius: 16px; padding: 16px; color: var(--text); font-family: 'DM Sans',sans-serif; font-size: 14px; resize: none; min-height: 100px; outline: none; transition: border-color 0.2s; margin-top: 16px; }
+  .comment-box:focus { border-color: var(--accent); }
+  .comment-box::placeholder { color: var(--muted); }
+
+  .btn-next { width: 100%; padding: 18px; background: var(--accent); color: #0a0a0a; border: none; border-radius: 14px; font-family: 'Bebas Neue',sans-serif; font-size: 20px; letter-spacing: 2px; cursor: pointer; margin-top: 24px; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(232,255,71,0.25); }
+  .btn-next:disabled { opacity: 0.3; cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn-back { background: none; border: none; color: var(--muted); font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 4px; margin-top: 12px; padding: 8px 0; transition: color 0.2s; }
+  .btn-back:hover { color: var(--text); }
+  .btn-restart { width: 100%; padding: 16px; background: transparent; color: var(--text); border: 1.5px solid var(--border); border-radius: 14px; font-family: 'DM Sans',sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; margin-top: 12px; }
+  .btn-restart:hover { border-color: var(--accent); color: var(--accent); }
+
+  .divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+  .intensity-val { font-family: 'Bebas Neue',sans-serif; font-size: 48px; color: var(--accent); text-align: center; margin-top: 4px; line-height: 1; }
+  .intensity-desc { text-align: center; font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .range-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: 8px; padding: 0 2px; }
+  input[type=range] { -webkit-appearance: none; width: 100%; height: 6px; background: var(--border); border-radius: 3px; outline: none; margin-top: 10px; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); cursor: pointer; box-shadow: 0 0 10px rgba(232,255,71,0.4); transition: transform 0.15s; }
+  input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+  /* ── TURNO TABS ── */
+  .turno-tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+  .turno-tab { flex: 1; padding: 12px 6px; border-radius: 14px; border: 2px solid var(--border); background: var(--card); cursor: pointer; transition: all 0.2s; text-align: center; }
+  .turno-tab .t-icon { font-size: 22px; display: block; margin-bottom: 4px; }
+  .turno-tab .t-name { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; color: var(--muted); }
+  .turno-tab.manha.active { border-color: var(--manha); background: rgba(247,151,30,0.08); }
+  .turno-tab.manha.active .t-name { color: var(--manha); }
+  .turno-tab.tarde.active { border-color: var(--tarde); background: rgba(79,195,247,0.08); }
+  .turno-tab.tarde.active .t-name { color: var(--tarde); }
+  .turno-tab.noite.active { border-color: var(--noite); background: rgba(156,108,250,0.08); }
+  .turno-tab.noite.active .t-name { color: var(--noite); }
+
+  .prof-section { display: none; }
+  .prof-section.visible { display: block; animation: fadeUp 0.3s ease forwards; }
+  .prof-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .prof-card { background: var(--card); border: 2px solid var(--border); border-radius: 16px; padding: 16px 12px; cursor: pointer; transition: all 0.2s; text-align: center; }
+  .prof-card:hover { border-color: var(--accent); }
+  .prof-card.selected { border-color: var(--accent); background: rgba(232,255,71,0.08); }
+  .prof-card .avatar { font-size: 32px; margin-bottom: 6px; }
+  .prof-card .name { font-size: 13px; font-weight: 600; }
+
+  /* ── SUCCESS ── */
+  .success-screen { display: none; text-align: center; padding: 40px 0; animation: fadeUp 0.5s ease forwards; }
+  .success-screen.visible { display: block; }
+  .success-icon { width: 90px; height: 90px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 42px; margin: 0 auto 28px; animation: pop 0.5s ease; }
+  @keyframes pop { 0% { transform: scale(0); } 70% { transform: scale(1.15); } 100% { transform: scale(1); } }
+  .success-title { font-family: 'Bebas Neue',sans-serif; font-size: 52px; line-height: 1; margin-bottom: 8px; }
+  .success-title span { color: var(--accent); }
+  .success-msg { color: var(--muted); font-size: 15px; line-height: 1.6; max-width: 300px; margin: 0 auto 28px; }
+
+  .summary-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 20px; text-align: left; margin-bottom: 24px; }
+  .summary-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+  .summary-row:last-child { border-bottom: none; }
+  .summary-row .key { color: var(--muted); }
+  .summary-row .val { font-weight: 600; }
+
+  /* ── RANKING ── */
+  .rank-section { text-align: left; margin-bottom: 20px; }
+  .rank-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 16px; }
+  .rank-title { font-family: 'Bebas Neue',sans-serif; font-size: 30px; letter-spacing: 1px; }
+  .rank-count { font-size: 12px; color: var(--muted); }
+  .rank-filter-tabs { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
+  .rank-tab { padding: 6px 14px; border-radius: 100px; border: 1.5px solid var(--border); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; color: var(--muted); background: var(--card); }
+  .rank-tab.active { border-color: var(--accent); background: rgba(232,255,71,0.1); color: var(--accent); }
+
+  .rank-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .rank-item { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; position: relative; overflow: hidden; }
+  .rank-item.gold   { border-color: #ffd700; }
+  .rank-item.silver { border-color: #aaa; }
+  .rank-item.bronze { border-color: #cd7f32; }
+
+  .rank-bg { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 14px; transition: width 1s cubic-bezier(0.4,0,0.2,1); width: 0; background: rgba(232,255,71,0.05); }
+  .rank-item.gold   .rank-bg { background: rgba(255,215,0,0.07); }
+  .rank-item.silver .rank-bg { background: rgba(170,170,170,0.07); }
+  .rank-item.bronze .rank-bg { background: rgba(205,127,50,0.07); }
+
+  .rank-row { display: flex; align-items: center; gap: 12px; position: relative; z-index: 1; }
+  .rank-pos { font-family: 'Bebas Neue',sans-serif; font-size: 24px; width: 30px; text-align: center; flex-shrink: 0; }
+  .rank-pos.gold   { color: #ffd700; }
+  .rank-pos.silver { color: #aaa; }
+  .rank-pos.bronze { color: #cd7f32; }
+  .rank-av { font-size: 26px; flex-shrink: 0; }
+  .rank-info { flex: 1; min-width: 0; }
+  .rank-name { font-weight: 600; font-size: 15px; }
+  .rank-sub  { font-size: 11px; color: var(--muted); margin-top: 3px; }
+  .rank-score { text-align: right; flex-shrink: 0; }
+  .rank-votes { font-family: 'Bebas Neue',sans-serif; font-size: 28px; color: var(--accent); line-height: 1; }
+  .rank-vlabel { font-size: 10px; color: var(--muted); }
+  .rank-avg-stars { font-size: 11px; color: #ffd700; margin-top: 2px; }
+
+  .rank-bar-wrap { margin-top: 10px; position: relative; z-index: 1; }
+  .rank-bar-bg { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .rank-bar-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 1.1s cubic-bezier(0.4,0,0.2,1); width: 0; }
+  .rank-item.gold   .rank-bar-fill { background: #ffd700; }
+  .rank-item.silver .rank-bar-fill { background: #aaa; }
+  .rank-item.bronze .rank-bar-fill { background: #cd7f32; }
+
+  .rank-empty { text-align: center; padding: 32px 20px; color: var(--muted); font-size: 14px; background: var(--card); border-radius: 14px; border: 1px solid var(--border); line-height: 1.7; }
+
+  .turno-badge { display: inline-block; padding: 2px 8px; border-radius: 100px; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; }
+  .turno-badge.manha { background: rgba(247,151,30,0.15); color: var(--manha); }
+  .turno-badge.tarde { background: rgba(79,195,247,0.15);  color: var(--tarde); }
+  .turno-badge.noite { background: rgba(156,108,250,0.15); color: var(--noite); }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <div class="logo-icon">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75L9.75 10.5l-1.5-.75V15l1.5-.75L12 15.75l2.25-1.125V9.75L12 8.25z"/></svg>
-    </div>
-    <h1>YT <span>→</span> MP3</h1>
-    <p class="tagline">Cole o link · Converta · Baixe no iPhone</p>
-  </header>
+<div class="wrapper">
 
-  <div class="card">
-    <div class="input-label">Link do YouTube</div>
-    <div class="input-row">
-      <input type="text" id="urlInput" placeholder="https://youtube.com/watch?v=..." autocomplete="off" autocorrect="off" spellcheck="false">
-      <button class="paste-btn" onclick="pasteURL()">Colar</button>
+  <div class="header" id="mainHeader">
+    <div class="logo-bar">
+      <div class="logo-icon">💪</div>
+      <span class="logo-text">ACADEMIA</span>
     </div>
-    <button class="convert-btn" id="convertBtn" onclick="convert()">
-      <span class="btn-text">CONVERTER</span>
-      <div class="spinner"></div>
-    </button>
-    <div class="status" id="status">
-      <div class="status-dot"></div>
-      <span id="statusText"></span>
-    </div>
+    <div class="header-title">PÓS<span>TREINO</span></div>
+    <p class="header-sub">Sua opinião nos torna melhores a cada dia</p>
   </div>
 
-  <div class="result-card" id="resultCard">
-    <div class="track-info">
-      <div class="thumb-placeholder" id="thumbWrap">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="#333"><path d="M12 3v10.55A4 4 0 1014 17V7h4V3h-6z"/></svg>
+  <div class="progress-track" id="progressTrack">
+    <div class="progress-step active" id="ps1"></div>
+    <div class="progress-step" id="ps2"></div>
+    <div class="progress-step" id="ps3"></div>
+    <div class="progress-step" id="ps4"></div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="step visible" id="step1">
+    <p class="step-label">Etapa 1 de 4</p>
+    <h2 class="step-title">Como foi o treino de hoje?</h2>
+    <div class="emoji-grid" id="treinoEmoji">
+      <button class="emoji-btn" data-val="1" onclick="selectEmoji(this)"><span class="emoji">😞</span><span class="label">Péssimo</span></button>
+      <button class="emoji-btn" data-val="2" onclick="selectEmoji(this)"><span class="emoji">😕</span><span class="label">Fraco</span></button>
+      <button class="emoji-btn" data-val="3" onclick="selectEmoji(this)"><span class="emoji">😐</span><span class="label">Regular</span></button>
+      <button class="emoji-btn" data-val="4" onclick="selectEmoji(this)"><span class="emoji">😊</span><span class="label">Bom</span></button>
+      <button class="emoji-btn" data-val="5" onclick="selectEmoji(this)"><span class="emoji">🔥</span><span class="label">Incrível</span></button>
+    </div>
+    <div style="margin-top:20px;">
+      <div class="divider"></div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:4px;">Intensidade do treino</p>
+      <input type="range" min="1" max="10" value="5" id="intensityRange" oninput="updateIntensity(this.value)">
+      <div class="intensity-val" id="intensityVal">5</div>
+      <div class="intensity-desc" id="intensityDesc">Moderado 💧</div>
+      <div class="range-labels"><span>Leve</span><span>Intenso</span></div>
+    </div>
+    <button class="btn-next" id="btn1" onclick="goStep(2)" disabled>CONTINUAR →</button>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step" id="step2">
+    <p class="step-label">Etapa 2 de 4</p>
+    <h2 class="step-title">Avalie o Professor</h2>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">Selecione o turno e o professor que te atendeu:</p>
+
+    <div class="turno-tabs">
+      <div class="turno-tab manha" onclick="selectTurno('manha')">
+        <span class="t-icon">🌅</span><span class="t-name">MANHÃ</span>
       </div>
-      <div>
-        <div class="track-title" id="trackTitle">Áudio pronto</div>
-        <div class="track-meta" id="trackMeta">MP3 · 128kbps</div>
+      <div class="turno-tab tarde" onclick="selectTurno('tarde')">
+        <span class="t-icon">☀️</span><span class="t-name">TARDE</span>
+      </div>
+      <div class="turno-tab noite" onclick="selectTurno('noite')">
+        <span class="t-icon">🌙</span><span class="t-name">NOITE</span>
       </div>
     </div>
-    <a class="dl-btn" id="dlBtn" href="#" target="_blank" rel="noopener">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 16l-5-5h3V4h4v7h3l-5 5zm-7 2h14v2H5v-2z"/></svg>
-      BAIXAR MP3
-    </a>
-    <div class="iphone-tip">
-      <strong>📱 iPhone:</strong> Toque em "Baixar MP3" → Safari abre o arquivo → toque <strong>Compartilhar ↑</strong> → <strong>"Salvar no Arquivos"</strong>.
+
+    <div class="prof-section" id="profManha"><div class="prof-grid" id="gridManha"></div></div>
+    <div class="prof-section" id="profTarde"><div class="prof-grid" id="gridTarde"></div></div>
+    <div class="prof-section" id="profNoite"><div class="prof-grid" id="gridNoite"></div></div>
+
+    <div id="profRatingSection" style="display:none;">
+      <div class="star-wrap">
+        <div class="star-label"><span class="icon">⭐</span> Nota geral do professor</div>
+        <div class="stars" id="profStars">
+          <span class="star" onclick="setStars('profStars',1)">⭐</span>
+          <span class="star" onclick="setStars('profStars',2)">⭐</span>
+          <span class="star" onclick="setStars('profStars',3)">⭐</span>
+          <span class="star" onclick="setStars('profStars',4)">⭐</span>
+          <span class="star" onclick="setStars('profStars',5)">⭐</span>
+        </div>
+      </div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:8px;">O que mais se destacou?</p>
+      <div class="tags-wrap" id="profTags">
+        <span class="tag" onclick="toggleTag(this)">Atencioso</span>
+        <span class="tag" onclick="toggleTag(this)">Técnica excelente</span>
+        <span class="tag" onclick="toggleTag(this)">Motivador</span>
+        <span class="tag" onclick="toggleTag(this)">Pontual</span>
+        <span class="tag" onclick="toggleTag(this)">Explicação clara</span>
+        <span class="tag" onclick="toggleTag(this)">Treino personalizado</span>
+      </div>
     </div>
+
+    <button class="btn-next" id="btn2" onclick="goStep(3)" disabled>CONTINUAR →</button>
+    <button class="btn-back" onclick="goStep(1)">← Voltar</button>
   </div>
 
-  <!-- Services -->
-  <div class="card">
-    <div class="svc-title">🔗 Serviços diretos (sempre funcionam)</div>
-    <div class="svc-grid">
-      <button class="svc-btn" onclick="openSvc('https://yt1s.io')">
-        <span class="svc-name">yt1s.io</span>
-        <span class="svc-desc">Rápido, sem cadastro</span>
-      </button>
-      <button class="svc-btn" onclick="openSvc('https://ytmp3.cc')">
-        <span class="svc-name">ytmp3.cc</span>
-        <span class="svc-desc">MP3 até 320kbps</span>
-      </button>
-      <button class="svc-btn" onclick="openSvc('https://ezmp3.cc')">
-        <span class="svc-name">ezmp3.cc</span>
-        <span class="svc-desc">Simples e direto</span>
-      </button>
-      <button class="svc-btn" onclick="openSvc('https://y2mate.com')">
-        <span class="svc-name">y2mate.com</span>
-        <span class="svc-desc">Vários formatos</span>
-      </button>
+  <!-- STEP 3 -->
+  <div class="step" id="step3">
+    <p class="step-label">Etapa 3 de 4</p>
+    <h2 class="step-title">Como estava a Academia?</h2>
+    <div class="star-wrap">
+      <div class="star-label"><span class="icon">🏋️</span> Equipamentos</div>
+      <div class="stars" id="equipStars">
+        <span class="star" onclick="setStars('equipStars',1)">⭐</span><span class="star" onclick="setStars('equipStars',2)">⭐</span>
+        <span class="star" onclick="setStars('equipStars',3)">⭐</span><span class="star" onclick="setStars('equipStars',4)">⭐</span>
+        <span class="star" onclick="setStars('equipStars',5)">⭐</span>
+      </div>
     </div>
-    <div class="svc-note">
-      💡 Toque num serviço → o link do YouTube é copiado automaticamente → cole no site e baixe o MP3.
+    <div class="star-wrap">
+      <div class="star-label"><span class="icon">🧹</span> Limpeza e higiene</div>
+      <div class="stars" id="limpStars">
+        <span class="star" onclick="setStars('limpStars',1)">⭐</span><span class="star" onclick="setStars('limpStars',2)">⭐</span>
+        <span class="star" onclick="setStars('limpStars',3)">⭐</span><span class="star" onclick="setStars('limpStars',4)">⭐</span>
+        <span class="star" onclick="setStars('limpStars',5)">⭐</span>
+      </div>
     </div>
+    <div class="star-wrap">
+      <div class="star-label"><span class="icon">❄️</span> Climatização / Conforto</div>
+      <div class="stars" id="confortStars">
+        <span class="star" onclick="setStars('confortStars',1)">⭐</span><span class="star" onclick="setStars('confortStars',2)">⭐</span>
+        <span class="star" onclick="setStars('confortStars',3)">⭐</span><span class="star" onclick="setStars('confortStars',4)">⭐</span>
+        <span class="star" onclick="setStars('confortStars',5)">⭐</span>
+      </div>
+    </div>
+    <p style="font-size:13px;color:var(--muted);margin-top:4px;margin-bottom:8px;">Algo específico a pontuar?</p>
+    <div class="tags-wrap" id="ambTags">
+      <span class="tag" onclick="toggleTag(this)">Muito cheio</span>
+      <span class="tag" onclick="toggleTag(this)">Música ótima</span>
+      <span class="tag" onclick="toggleTag(this)">Equipamento quebrado</span>
+      <span class="tag" onclick="toggleTag(this)">Ambiente acolhedor</span>
+      <span class="tag" onclick="toggleTag(this)">Banheiro limpo</span>
+      <span class="tag" onclick="toggleTag(this)">Estacionamento bom</span>
+    </div>
+    <button class="btn-next" onclick="goStep(4)">CONTINUAR →</button>
+    <button class="btn-back" onclick="goStep(2)">← Voltar</button>
   </div>
 
-  <footer>YT → MP3 · Gratuito · Sem anúncios</footer>
+  <!-- STEP 4 -->
+  <div class="step" id="step4">
+    <p class="step-label">Etapa 4 de 4</p>
+    <h2 class="step-title">Algum Comentário?</h2>
+    <p style="font-size:14px;color:var(--muted);line-height:1.6;">Opcional — mas adoramos ouvir você! Sugestões, elogios ou melhorias são muito bem-vindos.</p>
+    <textarea class="comment-box" id="comentario" placeholder="Ex: Gostaria que tivesse mais halteres leves disponíveis no horário da tarde..."></textarea>
+    <div class="divider"></div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:8px;">Você indicaria nossa academia?</p>
+    <div class="tags-wrap" id="nps">
+      <span class="tag" onclick="selectNps(this,'Com certeza! 🤩')">Com certeza! 🤩</span>
+      <span class="tag" onclick="selectNps(this,'Talvez 🤔')">Talvez 🤔</span>
+      <span class="tag" onclick="selectNps(this,'Não indicaria 😔')">Não indicaria 😔</span>
+    </div>
+    <button class="btn-next" onclick="submitForm()">ENVIAR AVALIAÇÃO ✓</button>
+    <button class="btn-back" onclick="goStep(3)">← Voltar</button>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="success-screen" id="successScreen">
+    <div class="success-icon">✓</div>
+    <div class="success-title">OBRIGADO<span>!</span></div>
+    <p class="success-msg">Avaliação registrada com sucesso. Juntos tornamos a academia cada vez melhor!</p>
+
+    <div class="summary-card" id="summaryCard"></div>
+
+    <div class="rank-section">
+      <div class="rank-header">
+        <span class="rank-title">🏆 RANKING DE PROFESSORES</span>
+        <span class="rank-count" id="rankCount"></span>
+      </div>
+      <div class="rank-filter-tabs">
+        <div class="rank-tab active" onclick="showRank('all',this)">Todos</div>
+        <div class="rank-tab" onclick="showRank('manha',this)">🌅 Manhã</div>
+        <div class="rank-tab" onclick="showRank('tarde',this)">☀️ Tarde</div>
+        <div class="rank-tab" onclick="showRank('noite',this)">🌙 Noite</div>
+      </div>
+      <div class="rank-list" id="rankList"></div>
+    </div>
+
+    <button class="btn-restart" onclick="restart()">↺ Nova avaliação</button>
+  </div>
+
 </div>
 
 <script>
-function isValidYT(url) { return /youtu\.?be/.test(url); }
-function getVideoId(url) { return url.match(/(?:v=|youtu\.be\/)([A-Za-z0-9_-]{11})/)?.[1]; }
-
-async function pasteURL() {
-  try {
-    const text = await navigator.clipboard.readText();
-    document.getElementById('urlInput').value = text;
-  } catch(e) { document.getElementById('urlInput').focus(); }
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const PROFESSORS = {
+  manha: ['Alana','Vilenara','Beatriz','Tayara','Anderson','Caio','Lorena'],
+  tarde: ['Caio','Murilo','Lucas','Ytalo','Victor','Matheus'],
+  noite: ['Matheus','Caique','Sidney','Ytalo']
+};
+const FEMALE = new Set(['Alana','Vilenara','Beatriz','Tayara','Lorena']);
+function avatar(name) {
+  const seed = [...name].reduce((a,c) => a + c.charCodeAt(0), 0);
+  return FEMALE.has(name)
+    ? ['👩‍🏫','👩‍💪','🏋️‍♀️'][seed % 3]
+    : ['👨‍🏫','🧑‍🏫','👨‍💪','🧑‍💪'][seed % 4];
 }
 
-function showStatus(type, msg) {
-  const el = document.getElementById('status');
-  el.className = 'status show ' + type;
-  document.getElementById('statusText').textContent = msg;
+// ── STORAGE ───────────────────────────────────────────────────────────────────
+const SK = 'academia_votes_v3';
+function loadVotes() { try { return JSON.parse(localStorage.getItem(SK)) || {}; } catch { return {}; } }
+function saveVotes(v) { try { localStorage.setItem(SK, JSON.stringify(v)); } catch {} }
+function recordVote(name, turno, stars) {
+  const v = loadVotes();
+  if (!v[name]) v[name] = { total: 0, starSum: 0, turno };
+  v[name].total++;
+  v[name].starSum += (stars || 0);
+  v[name].turno = turno;
+  saveVotes(v);
 }
 
-async function convert() {
-  const url = document.getElementById('urlInput').value.trim();
-  if (!url) { showStatus('error', 'Cole o link do YouTube primeiro'); return; }
-  if (!isValidYT(url)) { showStatus('error', 'Link inválido. Use um link do YouTube.'); return; }
+// ── STATE ─────────────────────────────────────────────────────────────────────
+const S = { treinoNota: null, intensidade: 5, turno: null, professor: null, profNota: 0, profTags: [], equip: 0, limp: 0, confort: 0, ambTags: [], comentario: '', nps: null };
 
-  const btn = document.getElementById('convertBtn');
-  btn.disabled = true;
-  btn.classList.add('loading');
-  document.getElementById('resultCard').classList.remove('show');
-  showStatus('info', 'Buscando áudio...');
+// ── BUILD GRIDS ───────────────────────────────────────────────────────────────
+function buildGrids() {
+  Object.entries(PROFESSORS).forEach(([t, names]) => {
+    const id = 'grid' + t[0].toUpperCase() + t.slice(1);
+    document.getElementById(id).innerHTML = names.map(n =>
+      `<div class="prof-card" onclick="selectProf(this,'${n}','${t}')">
+        <div class="avatar">${avatar(n)}</div>
+        <div class="name">${n}</div>
+      </div>`).join('');
+  });
+}
+buildGrids();
 
-  const vidId = getVideoId(url);
-
-  try {
-    // Use the open-source API from loader.to via CORS proxy
-    const target = `https://loader.to/api/button/?url=${encodeURIComponent(url)}&f=mp3&quality=128`;
-    const proxy = `https://corsproxy.io/?${encodeURIComponent(target)}`;
-
-    const res = await fetch(proxy, { signal: AbortSignal.timeout(20000) });
-    const text = await res.text();
-
-    // Extract any mp3 URL from the response
-    const mp3Match = text.match(/https?:\/\/[^\s"'<>]*\.mp3[^\s"'<>]*/);
-    const genericMatch = text.match(/href="(https:\/\/cdn[^\s"'<>]+)"/);
-
-    const dlUrl = mp3Match?.[0] || genericMatch?.[1];
-
-    if (dlUrl) {
-      showResult(dlUrl, vidId);
-      return;
-    }
-
-    // Try alternate: invidious open instance for audio stream
-    const invUrl = `https://inv.nadeko.net/latest_version?id=${vidId}&itag=140`;
-    const proxyInv = `https://corsproxy.io/?${encodeURIComponent(invUrl)}`;
-    const res2 = await fetch(proxyInv, { signal: AbortSignal.timeout(10000), redirect: 'follow' });
-    if (res2.ok) {
-      const blob = await res2.blob();
-      if (blob.size > 1000) {
-        const blobUrl = URL.createObjectURL(blob);
-        showResult(blobUrl, vidId, true);
-        return;
-      }
-    }
-
-    throw new Error('not_found');
-  } catch(e) {
-    console.error(e);
-    showStatus('error', 'Conversão automática indisponível agora. Use os serviços abaixo ↓');
-  } finally {
-    btn.disabled = false;
-    btn.classList.remove('loading');
+// ── TURNO ─────────────────────────────────────────────────────────────────────
+function selectTurno(t) {
+  document.querySelectorAll('.turno-tab').forEach(el => el.classList.remove('active'));
+  document.querySelector(`.turno-tab.${t}`).classList.add('active');
+  ['manha','tarde','noite'].forEach(x => {
+    const key = x[0].toUpperCase() + x.slice(1);
+    document.getElementById('prof' + key).classList.toggle('visible', x === t);
+  });
+  if (S.turno !== t) {
+    S.turno = t; S.professor = null;
+    document.querySelectorAll('.prof-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById('profRatingSection').style.display = 'none';
+    document.getElementById('btn2').disabled = true;
   }
 }
 
-function showResult(dlUrl, vidId, isBlob = false) {
-  showStatus('success', 'Pronto! Toque em "Baixar MP3" abaixo.');
-
-  if (vidId) {
-    const img = document.createElement('img');
-    img.className = 'thumb';
-    img.src = `https://img.youtube.com/vi/${vidId}/mqdefault.jpg`;
-    const tw = document.getElementById('thumbWrap');
-    if (tw && tw.id === 'thumbWrap') tw.replaceWith(img);
-  }
-
-  const dlBtn = document.getElementById('dlBtn');
-  dlBtn.href = dlUrl;
-  if (isBlob) {
-    dlBtn.download = 'audio.m4a';
-    document.getElementById('trackMeta').textContent = 'M4A · 128kbps';
-  } else {
-    dlBtn.download = 'audio.mp3';
-  }
-
-  document.getElementById('resultCard').classList.add('show');
-  document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+// ── PROFESSOR ─────────────────────────────────────────────────────────────────
+function selectProf(card, name, turno) {
+  document.querySelectorAll('.prof-card').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+  S.professor = name; S.turno = turno;
+  document.getElementById('profRatingSection').style.display = 'block';
+  document.getElementById('btn2').disabled = false;
+  setTimeout(() => document.getElementById('profRatingSection').scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
 }
 
-function openSvc(baseUrl) {
-  const url = document.getElementById('urlInput').value.trim();
-  if (url && isValidYT(url)) {
-    navigator.clipboard.writeText(url).catch(() => {});
-    showStatus('info', '✅ Link copiado! Cole no site que vai abrir.');
-    document.getElementById('status').classList.add('show');
-  }
-  window.open(baseUrl, '_blank');
+// ── EMOJI ─────────────────────────────────────────────────────────────────────
+function selectEmoji(btn) {
+  document.querySelectorAll('#treinoEmoji .emoji-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  S.treinoNota = +btn.dataset.val;
+  document.getElementById('btn1').disabled = false;
 }
 
-document.getElementById('urlInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter') convert();
-});
+// ── INTENSITY ─────────────────────────────────────────────────────────────────
+const DESCS = ['','Levíssimo 🧘','Leve 🚶','Leve-Moderado','Moderado 💧','Moderado+ 💦','Moderado-Intenso','Intenso 🔥','Muito Intenso 🔥','Extremo 💀','No Limite 💀🔥'];
+function updateIntensity(v) {
+  S.intensidade = v;
+  document.getElementById('intensityVal').textContent = v;
+  document.getElementById('intensityDesc').textContent = DESCS[v];
+}
+updateIntensity(5);
+
+// ── STARS ─────────────────────────────────────────────────────────────────────
+function setStars(gid, val) {
+  document.querySelectorAll(`#${gid} .star`).forEach((s,i) => s.classList.toggle('lit', i < val));
+  if (gid === 'profStars')    S.profNota  = val;
+  if (gid === 'equipStars')   S.equip     = val;
+  if (gid === 'limpStars')    S.limp      = val;
+  if (gid === 'confortStars') S.confort   = val;
+}
+
+// ── TAGS & NPS ────────────────────────────────────────────────────────────────
+function toggleTag(tag) { tag.classList.toggle('selected'); }
+function selectNps(tag, val) {
+  document.querySelectorAll('#nps .tag').forEach(t => t.classList.remove('selected'));
+  tag.classList.add('selected'); S.nps = val;
+}
+
+// ── NAVIGATION ────────────────────────────────────────────────────────────────
+function goStep(n) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('visible'));
+  document.getElementById('step' + n).classList.add('visible');
+  for (let i = 1; i <= 4; i++) {
+    const el = document.getElementById('ps' + i);
+    el.classList.remove('active','done');
+    if (i < n) el.classList.add('done');
+    else if (i === n) el.classList.add('active');
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── SUBMIT ────────────────────────────────────────────────────────────────────
+function submitForm() {
+  S.comentario = document.getElementById('comentario').value;
+  S.profTags   = [...document.querySelectorAll('#profTags .tag.selected')].map(t => t.textContent);
+  S.ambTags    = [...document.querySelectorAll('#ambTags .tag.selected')].map(t => t.textContent);
+
+  if (S.professor && S.turno) recordVote(S.professor, S.turno, S.profNota);
+
+  const emap = {1:'😞 Péssimo',2:'😕 Fraco',3:'😐 Regular',4:'😊 Bom',5:'🔥 Incrível'};
+  const tmap = { manha:'🌅 Manhã', tarde:'☀️ Tarde', noite:'🌙 Noite' };
+  const stars = n => n ? '⭐'.repeat(n) : '—';
+  const rows = [
+    { key:'Treino',       val: emap[S.treinoNota] || '—' },
+    { key:'Intensidade',  val: `${S.intensidade}/10` },
+    { key:'Turno',        val: tmap[S.turno] || '—' },
+    { key:'Professor',    val: S.professor || '—' },
+    { key:'Nota Prof.',   val: stars(S.profNota) },
+    { key:'Equipamentos', val: stars(S.equip) },
+    { key:'Limpeza',      val: stars(S.limp) },
+    { key:'Conforto',     val: stars(S.confort) },
+    { key:'Indicaria?',   val: S.nps || '—' },
+  ];
+  document.getElementById('summaryCard').innerHTML = rows.map(r =>
+    `<div class="summary-row"><span class="key">${r.key}</span><span class="val">${r.val}</span></div>`
+  ).join('');
+
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('visible'));
+  document.getElementById('progressTrack').style.display = 'none';
+  document.getElementById('mainHeader').style.display = 'none';
+  document.getElementById('successScreen').classList.add('visible');
+  renderRanking('all');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── RANKING ───────────────────────────────────────────────────────────────────
+function showRank(filter, tab) {
+  document.querySelectorAll('.rank-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  renderRanking(filter);
+}
+
+function renderRanking(filter) {
+  const votes = loadVotes();
+  let entries = Object.entries(votes).map(([name, d]) => ({
+    name, turno: d.turno || 'manha',
+    total: d.total,
+    avg: d.total > 0 ? d.starSum / d.total : 0
+  }));
+  if (filter !== 'all') entries = entries.filter(e => e.turno === filter);
+  entries.sort((a, b) => b.total - a.total || b.avg - a.avg);
+
+  const totalVotes = entries.reduce((s, e) => s + e.total, 0);
+  document.getElementById('rankCount').textContent =
+    `${totalVotes} avaliação${totalVotes !== 1 ? 'ões' : ''} registradas`;
+
+  const list = document.getElementById('rankList');
+  if (!entries.length) {
+    list.innerHTML = `<div class="rank-empty">Nenhuma avaliação ainda neste turno.<br>Seja o primeiro a avaliar! 🏆</div>`;
+    return;
+  }
+
+  const maxV = entries[0].total || 1;
+  const MC   = ['gold','silver','bronze'];
+  const ME   = ['🥇','🥈','🥉'];
+  const TL   = { manha:'Manhã', tarde:'Tarde', noite:'Noite' };
+
+  list.innerHTML = entries.map((e, i) => {
+    const pct = Math.round((e.total / maxV) * 100);
+    const mc  = i < 3 ? MC[i] : '';
+    const pos = i < 3 ? ME[i] : `${i+1}`;
+    const pc  = i < 3 ? MC[i] : '';
+    const avgDisp = e.avg > 0
+      ? '⭐'.repeat(Math.round(e.avg)) + ` <small style="color:var(--muted)">(${e.avg.toFixed(1)})</small>`
+      : '<span style="color:var(--muted);font-size:10px">sem nota</span>';
+    return `
+      <div class="rank-item ${mc}" id="ri${i}">
+        <div class="rank-bg" id="rb${i}"></div>
+        <div class="rank-row">
+          <div class="rank-pos ${pc}">${pos}</div>
+          <div class="rank-av">${avatar(e.name)}</div>
+          <div class="rank-info">
+            <div class="rank-name">${e.name}</div>
+            <div style="margin-top:3px"><span class="turno-badge ${e.turno}">${TL[e.turno]}</span></div>
+            <div class="rank-avg-stars">${avgDisp}</div>
+          </div>
+          <div class="rank-score">
+            <div class="rank-votes">${e.total}</div>
+            <div class="rank-vlabel">voto${e.total !== 1 ? 's' : ''}</div>
+          </div>
+        </div>
+        <div class="rank-bar-wrap">
+          <div class="rank-bar-bg"><div class="rank-bar-fill" id="rbar${i}" style="width:0%"></div></div>
+        </div>
+      </div>`;
+  }).join('');
+
+  // Animate
+  requestAnimationFrame(() => {
+    entries.forEach((e, i) => {
+      const pct = Math.round((e.total / maxV) * 100);
+      setTimeout(() => {
+        const bg  = document.getElementById(`rb${i}`);
+        const bar = document.getElementById(`rbar${i}`);
+        if (bg)  bg.style.width  = pct + '%';
+        if (bar) bar.style.width = pct + '%';
+      }, i * 90);
+    });
+  });
+}
+
+// ── RESTART ───────────────────────────────────────────────────────────────────
+function restart() { location.reload(); }
 </script>
 </body>
 </html>
