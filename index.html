@@ -162,9 +162,118 @@
   .turno-badge.manha { background: rgba(247,151,30,0.15); color: var(--manha); }
   .turno-badge.tarde { background: rgba(79,195,247,0.15);  color: var(--tarde); }
   .turno-badge.noite { background: rgba(156,108,250,0.15); color: var(--noite); }
+
+  /* ── RESULT BUTTON ── */
+  .btn-result {
+    position: fixed; top: 16px; right: 16px; z-index: 999;
+    background: var(--accent); color: #0a0a0a;
+    border: none; border-radius: 10px;
+    font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 2px;
+    padding: 10px 18px; cursor: pointer;
+    box-shadow: 0 4px 20px rgba(232,255,71,0.35);
+    transition: all 0.2s; display: flex; align-items: center; gap: 6px;
+  }
+  .btn-result:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(232,255,71,0.5); }
+
+  /* ── MODAL OVERLAY ── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 1000;
+    background: rgba(0,0,0,0.85); backdrop-filter: blur(6px);
+    animation: fadeIn 0.25s ease;
+  }
+  .modal-overlay.open { display: flex; align-items: flex-start; justify-content: center; padding: 20px 16px 40px; overflow-y: auto; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .modal-box {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 24px; width: 100%; max-width: 480px;
+    padding: 28px 24px; position: relative;
+    animation: slideUp 0.3s ease;
+  }
+  @keyframes slideUp { from { opacity:0; transform: translateY(30px); } to { opacity:1; transform: translateY(0); } }
+
+  .modal-close {
+    position: absolute; top: 18px; right: 18px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 50%; width: 34px; height: 34px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 18px; color: var(--muted); transition: all 0.2s;
+  }
+  .modal-close:hover { color: var(--text); border-color: var(--accent); }
+
+  .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 34px; letter-spacing: 1px; margin-bottom: 4px; }
+  .modal-title span { color: var(--accent); }
+  .modal-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+
+  /* ── CHART AREA ── */
+  .chart-section { margin-bottom: 24px; }
+  .chart-section-title { font-size: 11px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+
+  .chart-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 18px 16px; }
+  .chart-canvas-container { position: relative; width: 100%; }
+  canvas.result-chart { width: 100% !important; }
+
+  .chart-legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--muted); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+  .stat-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 20px; }
+  .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px 12px; text-align: center; }
+  .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: var(--accent); line-height: 1; }
+  .stat-lbl { font-size: 11px; color: var(--muted); margin-top: 3px; font-weight: 500; }
+
+  /* ── LOGO BESIDE TITLE ── */
+  .logo-title-wrap { display: flex; align-items: center; justify-content: center; gap: 14px; }
+  .logo-title-img { width: 52px; height: 52px; border-radius: 12px; object-fit: cover; flex-shrink: 0; }
 </style>
 </head>
 <body>
+<!-- RESULT BUTTON -->
+<button class="btn-result" onclick="openResultModal()">📊 RESULT</button>
+
+<!-- RESULT MODAL -->
+<div class="modal-overlay" id="resultModal">
+  <div class="modal-box">
+    <div class="modal-close" onclick="closeResultModal()">✕</div>
+    <div class="modal-title">RESULT<span>ADOS</span></div>
+    <p class="modal-sub">Avaliações registradas por dia</p>
+
+    <div class="stat-row" id="statRow">
+      <div class="stat-card"><div class="stat-num" id="statTotal">0</div><div class="stat-lbl">Total</div></div>
+      <div class="stat-card"><div class="stat-num" id="statMedia">—</div><div class="stat-lbl">Média ⭐</div></div>
+      <div class="stat-card"><div class="stat-num" id="statDias">0</div><div class="stat-lbl">Dias</div></div>
+    </div>
+
+    <div class="chart-section">
+      <div class="chart-section-title">📅 Avaliações por Dia</div>
+      <div class="chart-wrap">
+        <div class="chart-canvas-container">
+          <canvas class="result-chart" id="chartDia" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-section">
+      <div class="chart-section-title">🏫 Nota média por Treino</div>
+      <div class="chart-wrap">
+        <div class="chart-canvas-container">
+          <canvas class="result-chart" id="chartTreino" height="180"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-section">
+      <div class="chart-section-title">🌗 Distribuição por Turno</div>
+      <div class="chart-wrap" style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+        <div style="width:160px;height:160px;flex-shrink:0;margin:auto;">
+          <canvas id="chartTurno" width="160" height="160"></canvas>
+        </div>
+        <div class="chart-legend" id="turnoLegend"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
 <div class="wrapper">
 
   <div class="header" id="mainHeader">
@@ -172,7 +281,10 @@
       <div class="logo-icon">💪</div>
       <span class="logo-text">ACADEMIA</span>
     </div>
-    <div class="header-title">PÓS<span>TREINO</span></div>
+    <div class="logo-title-wrap">
+      <img class="logo-title-img" src="data:image/jpeg;base64,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" alt="logo" />
+      <div class="header-title">PÓS<span>TREINO</span></div>
+    </div>
     <p class="header-sub">Sua opinião nos torna melhores a cada dia</p>
   </div>
 
@@ -566,6 +678,178 @@ function renderRanking(filter) {
 
 // ── RESTART ───────────────────────────────────────────────────────────────────
 function restart() { location.reload(); }
+</script>
+
+<!-- Chart.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+// ── RESULT MODAL ───────────────────────────────────────────────────────────────
+const SK_DAILY = 'academia_daily_v1';
+
+function loadDaily() { try { return JSON.parse(localStorage.getItem(SK_DAILY)) || []; } catch { return []; } }
+function saveDaily(arr) { try { localStorage.setItem(SK_DAILY, JSON.stringify(arr)); } catch {} }
+
+function recordDaily(treinoNota, turno) {
+  const arr = loadDaily();
+  const today = new Date().toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit' });
+  arr.push({ date: today, nota: treinoNota || 3, turno: turno || 'manha', ts: Date.now() });
+  saveDaily(arr);
+}
+
+// Patch submitForm to also record daily
+const _origSubmit = submitForm;
+window.submitForm = function() {
+  recordDaily(S.treinoNota, S.turno);
+  _origSubmit();
+};
+
+let chartDiaInst = null, chartTreinoInst = null, chartTurnoInst = null;
+
+function openResultModal() {
+  const modal = document.getElementById('resultModal');
+  modal.classList.add('open');
+  buildResultCharts();
+}
+
+function closeResultModal() {
+  document.getElementById('resultModal').classList.remove('open');
+}
+
+// Close on overlay click
+document.getElementById('resultModal').addEventListener('click', function(e) {
+  if (e.target === this) closeResultModal();
+});
+
+function buildResultCharts() {
+  const arr = loadDaily();
+
+  // Seed demo data if empty so charts look good
+  const data = arr.length ? arr : getDemoData();
+
+  // Stats
+  const total = data.length;
+  const media = total ? (data.reduce((s,d)=>s+d.nota,0)/total).toFixed(1) : '—';
+  const dias  = [...new Set(data.map(d=>d.date))].length;
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statMedia').textContent = media;
+  document.getElementById('statDias').textContent  = dias;
+
+  // ── CHART 1: avaliações por dia ──────────────────────────────────────────────
+  const byDate = {};
+  data.forEach(d => { byDate[d.date] = (byDate[d.date] || 0) + 1; });
+  const dateLabels = Object.keys(byDate).sort((a,b) => {
+    const [da,ma] = a.split('/').map(Number);
+    const [db,mb] = b.split('/').map(Number);
+    return ma !== mb ? ma - mb : da - db;
+  });
+  const dateCounts = dateLabels.map(k => byDate[k]);
+
+  const ctx1 = document.getElementById('chartDia').getContext('2d');
+  if (chartDiaInst) chartDiaInst.destroy();
+  chartDiaInst = new Chart(ctx1, {
+    type: 'bar',
+    data: {
+      labels: dateLabels,
+      datasets: [{
+        label: 'Avaliações',
+        data: dateCounts,
+        backgroundColor: 'rgba(232,255,71,0.7)',
+        borderColor: '#e8ff47',
+        borderWidth: 2,
+        borderRadius: 8,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color:'#888', font:{ size:11 } }, grid:{ color:'#2a2a2a' } },
+        y: { ticks: { color:'#888', font:{ size:11 }, stepSize:1 }, grid:{ color:'#2a2a2a' }, beginAtZero:true }
+      }
+    }
+  });
+
+  // ── CHART 2: nota média do treino por dia ─────────────────────────────────────
+  const notaByDate = {};
+  const countByDate = {};
+  data.forEach(d => {
+    notaByDate[d.date]  = (notaByDate[d.date]  || 0) + d.nota;
+    countByDate[d.date] = (countByDate[d.date] || 0) + 1;
+  });
+  const avgNotas = dateLabels.map(k => +(notaByDate[k]/countByDate[k]).toFixed(2));
+
+  const ctx2 = document.getElementById('chartTreino').getContext('2d');
+  if (chartTreinoInst) chartTreinoInst.destroy();
+  chartTreinoInst = new Chart(ctx2, {
+    type: 'line',
+    data: {
+      labels: dateLabels,
+      datasets: [{
+        label: 'Nota média',
+        data: avgNotas,
+        borderColor: '#4fc3f7',
+        backgroundColor: 'rgba(79,195,247,0.12)',
+        borderWidth: 2.5,
+        pointBackgroundColor: '#4fc3f7',
+        pointRadius: 5,
+        tension: 0.4,
+        fill: true,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color:'#888', font:{ size:11 } }, grid:{ color:'#2a2a2a' } },
+        y: { min:1, max:5, ticks: { color:'#888', font:{ size:11 }, stepSize:1 }, grid:{ color:'#2a2a2a' } }
+      }
+    }
+  });
+
+  // ── CHART 3: Turno pizza ──────────────────────────────────────────────────────
+  const turnoCount = { manha:0, tarde:0, noite:0 };
+  data.forEach(d => { turnoCount[d.turno] = (turnoCount[d.turno]||0) + 1; });
+  const turnoColors = ['#f7971e','#4fc3f7','#9c6cfa'];
+  const turnoLabels = ['🌅 Manhã','☀️ Tarde','🌙 Noite'];
+  const turnoVals   = [turnoCount.manha, turnoCount.tarde, turnoCount.noite];
+
+  const ctx3 = document.getElementById('chartTurno').getContext('2d');
+  if (chartTurnoInst) chartTurnoInst.destroy();
+  chartTurnoInst = new Chart(ctx3, {
+    type: 'doughnut',
+    data: {
+      labels: turnoLabels,
+      datasets: [{ data: turnoVals, backgroundColor: turnoColors, borderWidth: 0, hoverOffset: 6 }]
+    },
+    options: {
+      responsive: false,
+      cutout: '62%',
+      plugins: { legend: { display: false } }
+    }
+  });
+
+  // Legend
+  document.getElementById('turnoLegend').innerHTML = turnoLabels.map((l,i) =>
+    `<div class="legend-item"><div class="legend-dot" style="background:${turnoColors[i]}"></div>${l}: <strong style="color:#f0f0f0">${turnoVals[i]}</strong></div>`
+  ).join('');
+}
+
+function getDemoData() {
+  // Returns realistic-looking demo data for the last 7 days
+  const today = new Date();
+  const entries = [];
+  const turnos = ['manha','tarde','noite'];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(today); d.setDate(d.getDate() - i);
+    const label = d.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit' });
+    const count = 2 + Math.floor(Math.random() * 5);
+    for (let j = 0; j < count; j++) {
+      entries.push({ date: label, nota: 2 + Math.floor(Math.random() * 4), turno: turnos[Math.floor(Math.random()*3)] });
+    }
+  }
+  return entries;
+}
 </script>
 </body>
 </html>
