@@ -261,6 +261,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 .btn-cloud-cancel:hover{color:var(--text);}
 .cloud-info-row{font-size:12px;color:var(--muted);text-align:center;margin-top:12px;line-height:1.6;}
 .cloud-info-row strong{color:var(--text);}
+.toggle-wrap.on{background:var(--success)!important;}
+.toggle-wrap.on #toggleBall{left:22px!important;}
 </style>
 </head>
 <body>
@@ -276,10 +278,103 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
   <button class="btn-cloud" id="btnCloud" onclick="openCloudModal()">
     <span class="cloud-icon">☁️</span> NUVEM
   </button>
+  <button class="btn-cloud" onclick="openQrModal()" title="Gerar QR Code">
+    <span class="cloud-icon">📱</span> QR
+  </button>
+  <button class="btn-cloud" onclick="openConfigModal()" title="Configurações">
+    <span class="cloud-icon">⚙️</span>
+  </button>
   <button class="btn-result" onclick="openPanel()">📊 RESULT</button>
 </div>
 
-<!-- CLOUD MODAL -->
+<!-- CONFIG MODAL -->
+<div class="cloud-modal" id="configModal">
+  <div class="cloud-sheet">
+    <div class="cloud-handle"></div>
+    <div class="cloud-title">⚙️ CONFIGURAÇÕES</div>
+    <div class="cloud-sub">Acesso restrito — gestor da academia</div>
+
+    <!-- LOGIN -->
+    <div id="configLogin">
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px;">
+        <p style="font-size:13px;color:var(--muted);margin-bottom:10px;">Digite a senha de administrador</p>
+        <input type="password" id="configSenhaInput" class="aluno-input" placeholder="Senha..." onkeydown="if(event.key==='Enter')verificarSenhaConfig()" style="margin-bottom:12px;">
+        <button class="btn-next" onclick="verificarSenhaConfig()" style="margin-top:0;font-size:16px;padding:14px;">ENTRAR →</button>
+        <p id="configSenhaErro" style="color:#ff4757;font-size:12px;text-align:center;margin-top:10px;display:none;">Senha incorreta. Tente novamente.</p>
+      </div>
+    </div>
+
+    <!-- PAINEL CONFIG (após login) -->
+    <div id="configPanel" style="display:none;">
+
+      <!-- ALTERAR SENHA -->
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px;">
+        <p style="font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">🔑 Alterar Senha</p>
+        <input type="password" id="novaSenha1" class="aluno-input" placeholder="Nova senha..." style="margin-bottom:8px;">
+        <input type="password" id="novaSenha2" class="aluno-input" placeholder="Confirmar nova senha..." style="margin-bottom:12px;">
+        <button class="btn-next" onclick="salvarNovaSenha()" style="margin-top:0;font-size:15px;padding:12px;">SALVAR SENHA</button>
+        <p id="senhaFeedback" style="font-size:12px;text-align:center;margin-top:8px;display:none;"></p>
+      </div>
+
+      <!-- ALERTAS WhatsApp -->
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px;">
+        <p style="font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:4px;">🔔 Alerta de Avaliação Negativa</p>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6;">Quando alguém dá 1–2 estrelas, você recebe uma mensagem no WhatsApp automaticamente.</p>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <label style="font-size:13px;color:var(--muted);flex-shrink:0;">Ativar alertas</label>
+          <div class="toggle-wrap" onclick="toggleAlerta()" id="toggleAlerta" style="width:44px;height:24px;border-radius:12px;background:var(--border);cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;">
+            <div id="toggleBall" style="width:20px;height:20px;border-radius:50%;background:#fff;position:absolute;top:2px;left:2px;transition:left .2s;"></div>
+          </div>
+          <span id="toggleLabel" style="font-size:12px;color:var(--muted);">Desativado</span>
+        </div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:6px;">Número WhatsApp do gestor</p>
+        <input type="tel" id="whatsappNum" class="aluno-input" placeholder="5585999990000 (com DDI+DDD)" style="margin-bottom:12px;">
+        <p style="font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.5;">Formato: 55 + DDD + número (ex: 5585998887766)</p>
+        <button class="btn-next" onclick="salvarConfigAlertas()" style="margin-top:0;font-size:15px;padding:12px;">💾 SALVAR CONFIGURAÇÃO</button>
+        <button class="btn-next" onclick="testarAlerta()" style="margin-top:8px;font-size:14px;padding:11px;background:transparent;color:var(--text);border:1.5px solid var(--border);">🧪 TESTAR ALERTA</button>
+      </div>
+
+      <!-- NOTA MÍNIMA PARA ALERTA -->
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px;">
+        <p style="font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">⭐ Nota mínima para disparar alerta</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;" id="notaMinBtns">
+          <button class="tag" onclick="setNotaMin(1,this)">1 ⭐</button>
+          <button class="tag" onclick="setNotaMin(2,this)">2 ⭐</button>
+          <button class="tag" onclick="setNotaMin(3,this)">3 ⭐</button>
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin-top:10px;" id="notaMinDesc">Disparar quando nota ≤ 2 estrelas</p>
+      </div>
+
+    </div>
+
+    <button class="btn-cloud-cancel" onclick="closeConfigModal()" style="width:100%;margin-top:16px;">✕ Fechar</button>
+  </div>
+</div>
+
+<!-- QR CODE MODAL -->
+<div class="cloud-modal" id="qrModal">
+  <div class="cloud-sheet">
+    <div class="cloud-handle"></div>
+    <div class="cloud-title">📱 QR CODE</div>
+    <div class="cloud-sub">Imprima e cole na saída da academia</div>
+
+    <div style="background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px;">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:8px;">URL do app (onde está hospedado)</p>
+      <input type="url" id="qrUrlInput" class="aluno-input" placeholder="https://seusite.com/avaliacao.html" style="margin-bottom:12px;">
+      <button class="btn-next" onclick="gerarQR()" style="margin-top:0;font-size:16px;padding:14px;">📱 GERAR QR CODE</button>
+    </div>
+
+    <div id="qrResult" style="display:none;text-align:center;">
+      <div style="background:#fff;border-radius:16px;padding:20px;display:inline-block;margin-bottom:16px;">
+        <div id="qrCanvas"></div>
+      </div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6;">Aponte a câmera do celular para o QR Code para abrir o app de avaliação.</p>
+      <button class="btn-next" onclick="baixarQR()" style="font-size:16px;padding:14px;">⬇️ BAIXAR IMAGEM</button>
+    </div>
+
+    <button class="btn-cloud-cancel" onclick="closeQrModal()" style="width:100%;margin-top:16px;">✕ Fechar</button>
+  </div>
+</div>
 <div class="cloud-modal" id="cloudModal">
   <div class="cloud-sheet">
     <div class="cloud-handle"></div>
@@ -328,12 +423,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
     <div class="logo-bar">
       <img class="logo-img" src="data:image/png;base64,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" alt="Logo">
       <span class="logo-text">PÓS TREINO</span>
-    </div>
-
-    <!-- SYNC STATUS -->
-    <div class="sync-bar" id="syncBar">
-      <div class="sync-dot loading" id="syncDot"></div>
-      <span id="syncMsg">Conectando ao banco de dados...</span>
     </div>
 
     <!-- PROF DA SEMANA -->
@@ -596,19 +685,13 @@ async function sbSelect(table, params = '') {
 
 // Test connection on load
 (async () => {
-  const dot = document.getElementById('syncDot');
-  const msg = document.getElementById('syncMsg');
   const btnCloud = document.getElementById('btnCloud');
   try {
     await sbSelect('avaliacoes', 'select=id&limit=1');
-    dot.className = 'sync-dot ok';
-    msg.textContent = '☁️ Conectado ao Supabase — dados em nuvem';
     btnCloud.title = 'Conectado ao Supabase';
     _lastSyncTime = Date.now();
     setTimeout(() => renderPotw(), 300);
   } catch(e) {
-    dot.className = 'sync-dot err';
-    msg.textContent = '⚠️ Sem conexão com a nuvem';
     btnCloud.style.borderColor = '#ff4757';
     btnCloud.style.color = '#ff4757';
     btnCloud.title = 'Sem conexão com o Supabase';
@@ -819,6 +902,15 @@ async function submitForm() {
     if (S.profNota === 5 && S.professor) {
       showToast(`⭐ ${S.professor} recebeu 5 ESTRELAS! 🔥`);
     }
+
+    // Alerta WhatsApp se nota baixa
+    dispararAlertaWhatsapp({
+      estrelas: S.profNota,
+      professor: S.professor,
+      turno: S.turno,
+      data: today,
+      comentario: S.comentario
+    });
 
   } catch(e) {
     hideLoading();
@@ -1288,6 +1380,193 @@ async function cloudLoadNow() {
     btnCloud.classList.remove('syncing');
     showToast('⚠️ Erro ao carregar da nuvem.');
   }
+}
+
+// ══════════════════════════════════════════════════════
+// CONFIG MODAL
+// ══════════════════════════════════════════════════════
+const CONFIG_SENHA_KEY = 'academia_config_senha';
+const CONFIG_ALERTA_KEY = 'academia_config_alerta';
+let configLogado = false;
+let alertaAtivo = false;
+let notaMinAlerta = 2;
+
+function getSenhaConfig() {
+  return localStorage.getItem(CONFIG_SENHA_KEY) || '1234';
+}
+
+function openConfigModal() {
+  configLogado = false;
+  document.getElementById('configLogin').style.display = 'block';
+  document.getElementById('configPanel').style.display = 'none';
+  document.getElementById('configSenhaInput').value = '';
+  document.getElementById('configSenhaErro').style.display = 'none';
+  document.getElementById('configModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('configSenhaInput').focus(), 300);
+}
+
+function closeConfigModal() {
+  document.getElementById('configModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('configModal').addEventListener('click', function(e) {
+  if (e.target === this) closeConfigModal();
+});
+
+function verificarSenhaConfig() {
+  const val = document.getElementById('configSenhaInput').value;
+  if (val === getSenhaConfig()) {
+    configLogado = true;
+    document.getElementById('configLogin').style.display = 'none';
+    document.getElementById('configPanel').style.display = 'block';
+    carregarConfigAlertas();
+  } else {
+    document.getElementById('configSenhaErro').style.display = 'block';
+    document.getElementById('configSenhaInput').value = '';
+    document.getElementById('configSenhaInput').focus();
+  }
+}
+
+function salvarNovaSenha() {
+  const s1 = document.getElementById('novaSenha1').value.trim();
+  const s2 = document.getElementById('novaSenha2').value.trim();
+  const fb = document.getElementById('senhaFeedback');
+  if (!s1) { fb.style.display='block'; fb.style.color='#ff4757'; fb.textContent='Digite uma senha.'; return; }
+  if (s1 !== s2) { fb.style.display='block'; fb.style.color='#ff4757'; fb.textContent='As senhas não coincidem.'; return; }
+  localStorage.setItem(CONFIG_SENHA_KEY, s1);
+  fb.style.display='block'; fb.style.color='var(--success)'; fb.textContent='✅ Senha alterada com sucesso!';
+  document.getElementById('novaSenha1').value = '';
+  document.getElementById('novaSenha2').value = '';
+  setTimeout(() => { fb.style.display='none'; }, 3000);
+}
+
+function carregarConfigAlertas() {
+  const cfg = JSON.parse(localStorage.getItem(CONFIG_ALERTA_KEY) || '{}');
+  alertaAtivo = cfg.ativo || false;
+  notaMinAlerta = cfg.notaMin || 2;
+  document.getElementById('whatsappNum').value = cfg.whatsapp || '';
+  atualizarToggle();
+  atualizarNotaMin(notaMinAlerta);
+}
+
+function atualizarToggle() {
+  const t = document.getElementById('toggleAlerta');
+  const lbl = document.getElementById('toggleLabel');
+  if (alertaAtivo) {
+    t.classList.add('on');
+    lbl.textContent = 'Ativado';
+    lbl.style.color = 'var(--success)';
+  } else {
+    t.classList.remove('on');
+    lbl.textContent = 'Desativado';
+    lbl.style.color = 'var(--muted)';
+  }
+}
+
+function toggleAlerta() {
+  alertaAtivo = !alertaAtivo;
+  atualizarToggle();
+}
+
+function setNotaMin(v, btn) {
+  notaMinAlerta = v;
+  atualizarNotaMin(v);
+}
+
+function atualizarNotaMin(v) {
+  document.querySelectorAll('#notaMinBtns .tag').forEach((b,i) => {
+    b.classList.toggle('selected', (i+1) === v);
+  });
+  document.getElementById('notaMinDesc').textContent = `Disparar quando nota ≤ ${v} estrela${v>1?'s':''}`;
+}
+
+function salvarConfigAlertas() {
+  const num = document.getElementById('whatsappNum').value.trim();
+  const cfg = { ativo: alertaAtivo, whatsapp: num, notaMin: notaMinAlerta };
+  localStorage.setItem(CONFIG_ALERTA_KEY, JSON.stringify(cfg));
+  showToast('✅ Configuração salva!');
+}
+
+function testarAlerta() {
+  const cfg = JSON.parse(localStorage.getItem(CONFIG_ALERTA_KEY) || '{}');
+  if (!cfg.whatsapp) { showToast('⚠️ Configure o número primeiro!'); return; }
+  const msg = encodeURIComponent(`🚨 *TESTE DE ALERTA — Academia*\n\nEste é um teste do sistema de notificações de avaliação negativa.\n\n⭐ Nota: 1 estrela\n👨‍🏫 Professor: Teste\n🕒 Horário: ${new Date().toLocaleTimeString('pt-BR')}\n\n_Configurado pelo sistema de avaliações._`);
+  window.open(`https://wa.me/${cfg.whatsapp}?text=${msg}`, '_blank');
+}
+
+function dispararAlertaWhatsapp(dados) {
+  const cfg = JSON.parse(localStorage.getItem(CONFIG_ALERTA_KEY) || '{}');
+  if (!cfg.ativo || !cfg.whatsapp) return;
+  if ((dados.estrelas || 0) > (cfg.notaMin || 2)) return;
+  const tmap = { manha:'🌅 Manhã', tarde:'☀️ Tarde', noite:'🌙 Noite' };
+  const msg = encodeURIComponent(
+    `🚨 *AVALIAÇÃO NEGATIVA — Academia*\n\n` +
+    `⭐ Nota professor: ${'⭐'.repeat(dados.estrelas||0)} (${dados.estrelas||0}/5)\n` +
+    `👨‍🏫 Professor: ${dados.professor||'—'}\n` +
+    `🕒 Turno: ${tmap[dados.turno]||dados.turno||'—'}\n` +
+    `📅 Data: ${dados.data||'—'}\n` +
+    (dados.comentario ? `💬 Comentário: "${dados.comentario}"\n` : '') +
+    `\n_Avaliação recebida agora pelo app pós-treino._`
+  );
+  window.open(`https://wa.me/${cfg.whatsapp}?text=${msg}`, '_blank');
+}
+
+// ══════════════════════════════════════════════════════
+// QR CODE MODAL
+// ══════════════════════════════════════════════════════
+function openQrModal() {
+  document.getElementById('qrModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('qrResult').style.display = 'none';
+}
+
+function closeQrModal() {
+  document.getElementById('qrModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('qrModal').addEventListener('click', function(e) {
+  if (e.target === this) closeQrModal();
+});
+
+function gerarQR() {
+  const url = document.getElementById('qrUrlInput').value.trim();
+  if (!url) { showToast('⚠️ Digite a URL do app primeiro!'); return; }
+  const container = document.getElementById('qrCanvas');
+  container.innerHTML = '';
+  const size = 220;
+  const script = document.createElement('script');
+  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+  script.onload = () => {
+    new QRCode(container, {
+      text: url,
+      width: size,
+      height: size,
+      colorDark: '#000000',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.H
+    });
+    document.getElementById('qrResult').style.display = 'block';
+    showToast('📱 QR Code gerado!');
+  };
+  script.onerror = () => {
+    container.innerHTML = `<p style="color:#ff4757;font-size:13px;">Erro ao carregar biblioteca QR. Verifique sua conexão.</p>`;
+    document.getElementById('qrResult').style.display = 'block';
+  };
+  document.body.appendChild(script);
+}
+
+function baixarQR() {
+  const img = document.querySelector('#qrCanvas img') || document.querySelector('#qrCanvas canvas');
+  if (!img) { showToast('Gere o QR Code primeiro!'); return; }
+  let src = img.src || img.toDataURL('image/png');
+  const a = document.createElement('a');
+  a.href = src;
+  a.download = 'qrcode-academia.png';
+  a.click();
+  showToast('📥 QR Code salvo!');
 }
 
 function restart() { location.reload(); }
